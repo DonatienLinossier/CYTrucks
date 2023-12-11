@@ -1,0 +1,20 @@
+Usage: * [FILE] [OPTIONS]...
+
+Description:
+  This script performs a specific task.
+
+Options:
+  -h, --help     Display this help message and exit.
+  -d1            Enable option 1 : .
+  -d2            Enable option 2.
+  -l             Enable option L.
+  -t             Enable option T.
+  -s             Enable option S.
+
+Examples:
+  * -d1 -l      # Run the script with options 1 and L.
+  * -t -s       # Run the script with options T and S.
+
+Options can be combined. For example:
+  * -d1 -t -s
+
