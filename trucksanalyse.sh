@@ -1,11 +1,32 @@
 #!/bin/bash
-start_time=`date +%s`
 
 printHelp() {
-cat printSH/printHelp.txt | sed "s#\\*#$0#g"
+        cat printSH/printHelp.txt | sed "s#\\*#$0#g"
+        exit 0
 }
 
+start_time=`date +%s`
 settingsVar=(0 0 0 0 0 0)
+linkFolderReset=("temp/" "images/")
+linkExeMain="progC/main.exe"
+linkCMain="progC/main.c"
+
+
+
+
+if [ ! -e "$linkExeMain" ]; then
+        gcc -o $linkExeMain $linkCMain 
+        if [ ! $? -eq 0 ];then
+                echo compilation not succesfull
+                exit   
+        fi
+fi      
+
+for folder in "${linkFolderReset[@]}"; do
+        if [ -e "$folder" ]; then
+                
+
+
 
 if [ -e "$1" ]; then
         for arg in "$@"; do
@@ -39,7 +60,6 @@ fi
 
 if [ "${settingsVar[0]}" -eq 1 ]; then
     printHelp
-    exit 0
 fi
 
 
