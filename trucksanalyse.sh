@@ -24,8 +24,10 @@ fi
 
 for folder in "${linkFolderReset[@]}"; do
         if [ -e "$folder" ]; then
-                
-
+                rm -r "$folder"
+        fi
+        mkdir "$folder"
+done
 
 
 if [ -e "$1" ]; then
