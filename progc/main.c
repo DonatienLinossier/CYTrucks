@@ -6,8 +6,5 @@ int main(){
     addNode(n, 1);
     printf("%d %d \n",height(n),balance(n));
     inOrder(n);
-    n=rightRotate(n);
-    printf("%d %d \n",height(n),balance(n));
-    inOrder(n);
     return 0;
 }
