@@ -5,14 +5,14 @@
 #include <math.h>
 #include <stdlib.h>
 
-typedef struct node{
+typedef struct node{//Declares the node structure used for AVL trees
     int key;
     int balance;
     struct node* left;
     struct node* right;
 }Node;
 
-Node* newNode(int a){
+Node* newNode(int a){//Creates a new node with "a" as a key
     Node* n = malloc(sizeof(Node));
     n->key=a;
     n->left = n->right = NULL;
@@ -20,7 +20,7 @@ Node* newNode(int a){
 }
 
 
-void inOrder(Node* n){
+void inOrder(Node* n){//Displays the values in the AVL tree in ascending order
     if(n==NULL){
         return;
     }
@@ -30,7 +30,7 @@ void inOrder(Node* n){
     return;
 }
 
-int height(Node* n){
+int height(Node* n){//Returns the height of the AVL tree(Max number of sons)
     if(n->right == NULL && n->left == NULL){
         return 1;
     }
@@ -45,7 +45,7 @@ int height(Node* n){
     }
 }
 
-int balance(Node* n){
+int balance(Node* n){//Returns the balance of the AVL Tree(height of its right branch - height of its left branch, should be between -1 and 1)
     if(n==NULL){
         exit(1);
     }
@@ -63,31 +63,33 @@ int balance(Node* n){
     }
 }
 
-Node* rightRotate(Node* t) {
-    Node* u = t->left;
-    t->left = u->right;
-    u->right = t;
+//Rotations are used to balance the AVL Tree when it is unbalanced by shifting the nodes
+
+Node* rightRotate(Node* n){//To use when the right branch is too heavy and straight
+    Node* u = n->left;
+    n->left = u->right;
+    u->right = n;
     return u;
 }
 
-Node* leftRotate(Node* t) {
-    Node* u = t->right;
-    t->right = u->left;
-    u->left = t;
+Node* leftRotate(Node* t){//To use when the left branch is too heavy and straight
+    Node* u = n->right;
+    n->right = u->left;
+    u->left = n;
     return u;
 }
 
-Node* doubleLeftRotate(Node* t) {
-    t->right = rightRotate(t->right);
-    return leftRotate(t);
+Node* doubleLeftRotate(Node* n){//To use when the right branch is too heavy and is bended
+    n->right = rightRotate(n->right);
+    return leftRotate(n);
 }
 
-Node* doubleRightRotate(Node* t) {
-    t->left = leftRotate(t->left);
-    return rightRotate(t);
+Node* doubleRightRotate(Node* n){//To use when the left branch is too heavy and is bended
+    n->left = leftRotate(n->left);
+    return rightRotate(n);
 }
 
-Node* addNode(Node* n, int v){
+Node* addNode(Node* n, int v){//Adds a node of key v to the AVL Tree, then fixes the balance of the tree using rotations if needed
     if (n==NULL){
         Node * new_node=newNode(v);
         return new_node;
@@ -118,6 +120,5 @@ Node* addNode(Node* n, int v){
     }
     return n;
 }
-
 
 #endif
