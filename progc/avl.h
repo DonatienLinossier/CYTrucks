@@ -15,6 +15,7 @@ typedef struct node{
 Node* newNode(int a){
     Node* n = malloc(sizeof(Node));
     n->key=a;
+    n->left = n->right = NULL;
     return n;
 }
 
@@ -24,8 +25,8 @@ void inOrder(Node* n){
         return;
     }
     inOrder(n->left);
-    inOrder(n->right);
     printf("%d\n",n->key);
+    inOrder(n->right);
     return;
 }
 
@@ -58,37 +59,32 @@ int balance(Node* n){
         return height(n->right);
     }
     else{
-        return(height(n->right)-height(n->right));
+        return(height(n->right)-height(n->left));
     }
 }
 
-Node* rightRotate(Node* y) {
-    printf("r\n");
-    Node* x = y->left;
-    Node* t = x->right;
-    x->right = y;
-    y->left = t;
-    return x;
+Node* rightRotate(Node* t) {
+    Node* u = t->left;
+    t->left = u->right;
+    u->right = t;
+    return u;
 }
 
-Node* leftRotate(Node* x) {
-    printf("l\n");
-    Node* y = x->right;
-    Node* t = y->left;
-    y->left = x;
-    x->right = t;
+Node* leftRotate(Node* t) {
+    Node* u = t->right;
+    t->right = u->left;
+    u->left = t;
+    return u;
 }
 
-Node* doubleLeftRotate(Node* z) {
-    printf("dl\n");
-    z->right = rightRotate(z->right);
-    return leftRotate(z);
+Node* doubleLeftRotate(Node* t) {
+    t->right = rightRotate(t->right);
+    return leftRotate(t);
 }
 
-Node* doubleRightRotate(Node* z) {
-    printf("dr\n");
-    z->left = leftRotate(z->left);
-    return rightRotate(z);
+Node* doubleRightRotate(Node* t) {
+    t->left = leftRotate(t->left);
+    return rightRotate(t);
 }
 
 Node* addNode(Node* n, int v){
@@ -97,12 +93,11 @@ Node* addNode(Node* n, int v){
         return new_node;
     }
     if (v<n->key){
-        printf("a\n");
         n->left = addNode(n->left,v);
-        printf("%d\n",balance(n));
+    
         if(balance(n)<=-2){
-            printf("%d\n",balance(n));
             if(v < n->left->key){
+                
                 n = rightRotate(n);
             }
             else {
@@ -122,8 +117,6 @@ Node* addNode(Node* n, int v){
         }
     }
     return n;
-
-
 }
 
 

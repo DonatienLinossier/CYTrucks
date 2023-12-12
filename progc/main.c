@@ -1,9 +1,9 @@
 #include "avl.h"
 
 int main(){
-    Node* n = newNode(6);
-    addNode(n, 3);
-    addNode(n, 1);
+    Node* n = newNode(1);
+    n=addNode(n, 3);
+    n=addNode(n, 6);
     printf("%d %d \n",height(n),balance(n));
     inOrder(n);
     return 0;
