@@ -2,10 +2,21 @@
 
 printHelp() {
         cat printSH/printHelp.txt | sed "s#\\*#$0#g"
-        exit 0
+        exitTime $1
 }
 
-start_time=`date +%s`
+startTime() {
+        start_time=`date +%s`
+}
+
+exitTime() {
+        end_time=`date +%s`
+        echo execution time was `expr $end_time - $start_time` s.
+        exit $1
+}
+
+
+
 settingsVar=(0 0 0 0 0 0)
 linkFolderReset=("temp/" "images/")
 linkExeMain="progC/main.exe"
@@ -18,7 +29,8 @@ if [ ! -e "$linkExeMain" ]; then
         gcc -o $linkExeMain $linkCMain 
         if [ ! $? -eq 0 ];then
                 echo compilation not succesfull
-                exit   
+                exit 1
+                   
         fi
 fi      
 
@@ -51,17 +63,10 @@ else
         settingsVar[0]=1
 fi
 
-
-
-
-
-#for i in "${settingsVar[@]}"; do
-#    echo "$i"
-#done
-
+startTime 
 
 if [ "${settingsVar[0]}" -eq 1 ]; then
-    printHelp
+    printHelp 0
 fi
 
 
@@ -75,5 +80,3 @@ fi
 
 
 
-end_time=`date +%s`
-echo execution time was `expr $end_time - $start_time` s.
