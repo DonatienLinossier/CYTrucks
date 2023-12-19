@@ -72,7 +72,7 @@ Node* rightRotate(Node* n){//To use when the right branch is too heavy and strai
     return u;
 }
 
-Node* leftRotate(Node* t){//To use when the left branch is too heavy and straight
+Node* leftRotate(Node* n){//To use when the left branch is too heavy and straight
     Node* u = n->right;
     n->right = u->left;
     u->left = n;
@@ -121,4 +121,4 @@ Node* addNode(Node* n, int v){//Adds a node of key v to the AVL Tree, then fixes
     return n;
 }
 
-#endif
+#endif //AVL_H
