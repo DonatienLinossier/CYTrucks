@@ -6,22 +6,27 @@ printHelp() {
 }
 
 startTime() {
-        start_time=`date +%s`
+        start_time=`date +%s.%N`
 }
 
 exitTime() {
-        end_time=`date +%s`
-        echo execution time was `expr $end_time - $start_time` s.
+        end_time=`date +%s.%N`
+        x=$(echo "$end_time - $start_time" | bc)
+        if [ "$(echo "$x<1" | bc)" -eq 1 ];then
+                echo execution time was 0$x s 
+        else
+                echo execution time was $x s 
+        fi
         exit $1
 }
 
-
+startTime
 
 settingsVar=(0 0 0 0 0 0)
 linkFolderReset=("temp/" "images/")
-linkExeMain="progC/main.exe"
-linkCMain="progC/main.c"
-
+linkExeMain="progc/main.exe"
+linkCMain="progc/main.c"
+sleep 1
 
 
 
@@ -63,7 +68,7 @@ else
         settingsVar[0]=1
 fi
 
-startTime 
+ 
 
 if [ "${settingsVar[0]}" -eq 1 ]; then
     printHelp 0
@@ -76,7 +81,7 @@ fi
 
 
 
-
+exitTime
 
 
 
