@@ -1,0 +1,31 @@
+# Données de test (remplacez-les par vos propres données)
+conducteurs = "Alice Bob Charlie David"
+nombre_trajets = "25 18 30 22"
+
+# Conversion des chaînes en listes
+conducteurs = strsplit(conducteurs)
+nombre_trajets = strsplit(nombre_trajets)
+
+# Création du fichier de données temporaire
+set print 'data.txt'
+do for [i=1:words(conducteurs)] {
+    print word(conducteurs, i), word(nombre_trajets, i)
+}
+set print
+
+# Configuration du graphique
+set terminal pngcairo enhanced font 'arial,12' size 800,400
+set output 'histogramme_horizontal.png'
+set style data histograms
+set style fill solid border -1
+set ylabel "Conducteurs"
+set xlabel "Nombre de trajets"
+set title "Nombre de trajets par conducteur"
+set yrange [0.5:words(conducteurs)+0.5]
+set boxwidth 0.5
+
+# Tracé de l'histogramme horizontal
+plot 'data.txt' using 2:($0+1):xtic(1) with boxes lc rgb "skyblue" notitle
+
+# Suppression du fichier de données temporaire
+system('rm data.txt')
