@@ -7,7 +7,6 @@
 
 typedef struct node{//Declares the node structure used for AVL trees
     int key;
-    int balance;
     struct node* left;
     struct node* right;
 }Node;

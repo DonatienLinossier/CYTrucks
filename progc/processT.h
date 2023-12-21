@@ -8,18 +8,18 @@
 
 typedef struct nodeT{//Declares the NodeT structure used for AVL trees
     char* key;
-    int balance;
     struct nodeT* left;
     struct nodeT* right;
-    int num_step;
-    struct nodeT* drivers;
+    int num_steps;
+    int num_firsts;
 }NodeT;
 
-NodeT* newNodeT(char* a){//Creates a new NodeT with "a" as a key
+NodeT* newNodeT(char* city_name){//Creates a new NodeT with the city_name as a key
     NodeT* n = malloc(sizeof(NodeT));
-    n->key=a;
-    n->left = n->right = n->drivers = NULL;
-    n->num_step=0;
+    n->key=city_name;
+    n->left = n->right = NULL;
+    n->num_steps = 1;
+    n->num_firsts = 0;
     return n;
 }
 
@@ -93,20 +93,21 @@ NodeT* doubleRightRotateT(NodeT* n){//To use when the left branch is too heavy a
     return rightRotateT(n);
 }
 
-NodeT* addStepT(NodeT* n, char* city, char* name){//Adds a NodeT of key v to the AVL Tree, then fixes the balance of the tree using rotations if needed
+NodeT* addStepT(NodeT* n, char* city, int first_step){//Adds a NodeT of key v to the AVL Tree, then fixes the balance of the tree using rotations if needed
     if (n==NULL){
-        NodeT * new_node=newNodeT(city);
-        new_node = addStepT(new_node, name, NULL);
+        NodeT* new_node=newNodeT(city);
+        new_node->num_firsts=first_city;
         return new_node;
     }
     int str_comp=strcmp(city, n->key);
 
     if(str_comp==0){
-        n->drivers = addStepT(n->drivers, name, NULL);
+        n->num_steps+=1;
+        n->num_firsts+=first_city;
     }
 
     else if (str_comp<0){
-        n->left = addStepT(n->left, city, name);
+        n->left = addStepT(n->left, city, first_step);
     
         if(balanceT(n)<=-2){
             if(strcmp(city, n->left->key) < 0){
@@ -119,7 +120,7 @@ NodeT* addStepT(NodeT* n, char* city, char* name){//Adds a NodeT of key v to the
         }
     }
     else if (str_comp>0){
-        n->right = addStepT(n->right, city, name);
+        n->right = addStepT(n->right, city, first_step);
         if(balanceT(n)>=2){
             if(strcmp(city, n->right->key) > 0){
                 n = leftRotateT(n);
