@@ -19,9 +19,9 @@ void getDataForS(const char* input, int* routeID, float* dist) {
     char* token = strtok((char*)input, ";");//route ID
     *routeID = atoi(token);
 
-    token = strtok((char*)NULL, ";"); //StepID
-    token = strtok((char*)NULL, ";"); //townA
-    token = strtok((char*)NULL, ";"); //townB
+    strtok((char*)NULL, ";"); //StepID
+    strtok((char*)NULL, ";"); //townA
+    strtok((char*)NULL, ";"); //townB
 
     token = strtok((char*)NULL, ";"); //Dist
     *dist = strtof(token, NULL);
