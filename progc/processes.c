@@ -1,60 +1,59 @@
-#include "avl.S"
-#include "avl.T"
-#include "avl.T2"
-#include "temp.c"
+#include "avlS.h"
+#include "avlT.h"
+#include "avlT2.h"
+#include "inputFile.h"
 
-#define NUM_CITIES 10
-
-void processT()
+void processS(){
     char bufferb[4096]; // Assuming a reasonable buffer size
-
-    if (getcwd(bufferb, sizeof(bufferb)) != NULL) {
-        printf("Current working directory: %s\n", bufferb);
-    } else {
-        perror("getcwd() error");
-        return 1;
-    }
 
     FILE *fptr;
 
     // Open a file in read mode
     char buffer[100];
-    fptr = fopen("data/sample.csv", "r"); 
-    //fptr = fopen("temp/tmpD1.csv", "r"); 
+    fptr = fopen("/cergy/homee/g/gaudareeli/TPinfo/CYTrucks/CYTrucks/data/data10k.csv", "r"); 
     if(fptr==NULL) {
-        printf("NULL");
+        printf("NULL\n");
         exit(0);
     }
 
-    char* cityA = NULL;
-    char* cityB = NULL;
-    int isFirst = 0;
-
-    nodeT* root_t = NULL;
-
+    int route_id;
+    float distance;
     fgets(buffer, sizeof(buffer), fptr); //get first line
+    NodeS* root = NULL;
+    int aaaa=0;
     while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
-        getDataForT(buffer, &cityA, &cityB, &isFirst);
-        printf("%s %s %d\n", cityA, cityB, isFirst);
-        if(cityA!=NULL) {
-            free(cityA);
-            cityA = NULL;
+        //printf("%d\n",aaaa);
+        aaaa+=1;
+        getDataForS(buffer, &route_id, &distance);
+        /*
+        if(route_id!=NULL) {
+            free(route_id);
+            route_id = NULL;
         }
-        if(cityB!=NULL) {
-            free(cityB);
-            cityB = NULL;
-        }
+        if(distance!=NULL) {
+            free(distance);
+            distance = NULL;
+        }*/
+        root = addNodeS(root,route_id,distance);
+    }
+    printf("%d\n",heightS(root));
 
+    int count = 0;
+    NodeS* maxRangeNodes[10];
+    int maxRangeValues[10];
 
-        addStepT(root_t, cityB, isFirst);
+    getMaxRangeValues(root, &count, maxRangeNodes, maxRangeValues);
+    printf("z\n");
+
+    // Print the results
+    for (int i = 0; i < count; i++) {
+        printf("RouteID %d: max=%d, min=%d, moyenne=%d\n", maxRangeNodes[i]->key, maxRangeNodes[i]->max, maxRangeNodes[i]->min, maxRangeNodes[i]->total/maxRangeNodes[i]->num_steps);
     }
 
-    nodeT*[NUM_CITIES] max_through;
-    for (int i=0; i<NUM_CITIES; i++){
-        max_through[i]=
-    }
 
     
+
     
     fclose(fptr);
-    return 0;
+    return;
+}

@@ -132,4 +132,39 @@ NodeS* addNodeS(NodeS* n, int route_id, int distance){//Adds a NodeS of key v to
     return n;
 }
 
+
+// Function to perform in-order traversal and find the nodes with the highest B values
+void getMaxRangeValues(NodeS* root, int* count, NodeS* maxRangeNodes[], int maxRangeValues[]) {
+    if (root != NULL) {
+        // Traverse the right subtree first
+        getMaxRangeValues(root->right, count, maxRangeNodes, maxRangeValues);
+
+        // Check if the current node has a higher B value than the current minimum in the top 10
+        if (*count < 10 || (root->max-root->min) > maxRangeValues[9]) {
+            // Insert the current node into the top 10
+            int i = *count;
+            while (i > 0 && (i >= 10 || (root->max-root->min) > maxRangeValues[i - 1])) {
+                
+                maxRangeValues[i] = maxRangeValues[i - 1];
+                printf("%d\n",*count);
+                printf("f\n");
+                maxRangeNodes[i] = maxRangeNodes[i - 1];
+                i--;
+            }
+            printf("e\n");
+            maxRangeValues[i] = (root->max-root->min);
+            maxRangeNodes[i] = root;
+
+            // Update the count
+            printf("%d\n",*count);
+            (*count)++;
+        }
+
+        // Traverse the left subtree
+        getMaxRangeValues(root->left, count, maxRangeNodes, maxRangeValues);
+    }
+}
+
+
+
 #endif //AVLS_H
