@@ -1,5 +1,5 @@
-#ifndef PROCESSS_H
-#define PROCESSS_H
+#ifndef AVLS_H
+#define AVLS_H
 
 #include <stdio.h>
 #include <math.h>
@@ -132,4 +132,4 @@ NodeS* addNodeS(NodeS* n, int route_id, int distance){//Adds a NodeS of key v to
     return n;
 }
 
-#endif //PROCESSS_H
+#endif //AVLS_H

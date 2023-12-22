@@ -1,5 +1,5 @@
-#ifndef PROCESST_H
-#define PROCESST_H
+#ifndef AVLT_H
+#define AVLT_H
 
 #include <stdio.h>
 #include <math.h>

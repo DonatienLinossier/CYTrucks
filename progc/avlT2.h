@@ -1,5 +1,5 @@
-#ifndef PROCESST2_H
-#define PROCESST2_H
+#ifndef AVLT2_H
+#define AVLT2_H
 
 #include <stdio.h>
 #include <math.h>
@@ -132,4 +132,4 @@ NodeT2* addStepT2(NodeT2* n, char* city, char* name){//Adds a NodeT2 of key v to
     return n;
 }
 
-#endif //PROCESST2_H 
+#endif //AVLT2_H 
