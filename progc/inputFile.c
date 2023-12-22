@@ -1,16 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include "inputFile.h"
 
-
-//Return the stepID, the cityA and the cityB from an input line
 void getDataForT(const char* input, char** cityA, char** cityB, int* isFirst) {
     char* token = strtok((char*)input, ";");//route ID
 
 
     token = strtok((char*)NULL, ";");
-    *isFirst = atoi(token);
+    *isFirst = atoi(token) == 1;
 
     token = strtok((char*)NULL, ";");
     *cityA = strdup(token);
@@ -19,23 +14,32 @@ void getDataForT(const char* input, char** cityA, char** cityB, int* isFirst) {
     *cityB = strdup(token);
 }
 
+
+void getDataForS(const char* input, int* routeID, float* dist) {
+    char* token = strtok((char*)input, ";");//route ID
+    *routeID = atoi(token);
+
+    token = strtok((char*)NULL, ";"); //StepID
+    token = strtok((char*)NULL, ";"); //townA
+    token = strtok((char*)NULL, ";"); //townB
+
+    token = strtok((char*)NULL, ";"); //Dist
+    *dist = strtof(token, NULL);
+}
+
+/*
+#########################################"
+# Exemple of usage
+##########################################
 int main() {
 
     char bufferb[4096]; // Assuming a reasonable buffer size
-
-    if (getcwd(bufferb, sizeof(bufferb)) != NULL) {
-        printf("Current working directory: %s\n", bufferb);
-    } else {
-        perror("getcwd() error");
-        return 1;
-    }
 
     FILE *fptr;
 
     // Open a file in read mode
     char buffer[100];
     fptr = fopen("sample.csv", "r"); 
-    //fptr = fopen("temp/tmpD1.csv", "r"); 
     if(fptr==NULL) {
         printf("NULL");
         exit(0);
@@ -58,18 +62,20 @@ int main() {
         }
     }
     
+
+    
+    fclose(fptr);
+    return 0;
+}*/
+
+
+//Bordel, ne plus lire a partir d'ici
+
     /*while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
         D1* d1 = createD1fromLine(buffer);
         printf("%s %d\n", d1->driverName, d1->routeID);
 
     }*/
-    
-    fclose(fptr);
-    return 0;
-}
-
-
-
 
 /*typedef struct D1 {
     char* driverName;
