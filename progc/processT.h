@@ -96,14 +96,14 @@ NodeT* doubleRightRotateT(NodeT* n){//To use when the left branch is too heavy a
 NodeT* addStepT(NodeT* n, char* city, int first_step){//Adds a NodeT of key v to the AVL Tree, then fixes the balance of the tree using rotations if needed
     if (n==NULL){
         NodeT* new_node=newNodeT(city);
-        new_node->num_firsts=first_city;
+        new_node->num_firsts=first_step;
         return new_node;
     }
     int str_comp=strcmp(city, n->key);
 
     if(str_comp==0){
         n->num_steps+=1;
-        n->num_firsts+=first_city;
+        n->num_firsts+=first_step;
     }
 
     else if (str_comp<0){

@@ -86,36 +86,36 @@ NodeS* doubleLeftRotateS(NodeS* n){//To use when the right branch is too heavy a
     return leftRotateS(n);
 }
 
-NodeS* doubleRightRotate(NodeS* n){//To use when the left branch is too heavy and is bended
+NodeS* doubleRightRotateS(NodeS* n){//To use when the left branch is too heavy and is bended
     n->left = leftRotateS(n->left);
     return rightRotateS(n);
 }
 
 NodeS* addNodeS(NodeS* n, int route_id, int distance){//Adds a NodeS of key v to the AVL Tree, then fixes the balance of the tree using rotations if needed
     if (n==NULL){
-        NodeS * new_node=newNodeS(route);
+        NodeS * new_node=newNodeS(route_id, distance);
         return new_node;
     }
     if (route_id < n->key){
-        n->left = addNodeS(n->left,v);
+        n->left = addNodeS(n->left, route_id, distance);
     
-        if(balance(n)<=-2){
+        if(balanceS(n)<=-2){
             if(route_id < n->left->key){
-                n = rightRotate(n);
+                n = rightRotateS(n);
             }
             else {
-                n = doubleRightRotate(n);
+                n = doubleRightRotateS(n);
             }
         }
     }
     else if (route_id > n->key){
-        n->right = addNodeS(n->right,v);
-        if(balance(n)>=2){
+        n->right = addNodeS(n->right, route_id, distance);
+        if(balanceS(n)>=2){
             if(route_id > n->right->key){
-                n = leftRotate(n);
+                n = leftRotateS(n);
             }
             else {
-                n = doubleLeftRotate(n);
+                n = doubleLeftRotateS(n);
             }
         }
     }
