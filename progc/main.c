@@ -3,17 +3,20 @@
 #include <string.h>
 #include <unistd.h>
 
-void getDataForT(const char* input, char* cityA, char* cityB, char* isFirst) {
+
+//Return the stepID, the cityA and the cityB from an input line
+void getDataForT(const char* input, char** cityA, char** cityB, int* isFirst) {
     char* token = strtok((char*)input, ";");//route ID
 
-    token = strtok((char*)input, ";");
+
+    token = strtok((char*)NULL, ";");
     *isFirst = atoi(token);
 
-    token = strtok((char*)input, ";");
-    cityA = strdup(token);(token);
+    token = strtok((char*)NULL, ";");
+    *cityA = strdup(token);
 
-    token = strtok((char*)input, ";");
-    cityB = strdup(token);(token);
+    token = strtok((char*)NULL, ";");
+    *cityB = strdup(token);
 }
 
 int main() {
@@ -38,13 +41,21 @@ int main() {
         exit(0);
     }
 
-    char* cityA;
-    char* cityB;
-    char isFirst;
+    char* cityA = NULL;
+    char* cityB = NULL;
+    int isFirst = 0;
+    fgets(buffer, sizeof(buffer), fptr); //get first line
     while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
-        getDataForT(buffer, cityA, cityB, &isFirst);
-        printf("%s %s %c", cityA, cityB, isFirst);
-
+        getDataForT(buffer, &cityA, &cityB, &isFirst);
+        printf("%s %s %d\n", cityA, cityB, isFirst);
+        if(cityA!=NULL) {
+            free(cityA);
+            cityA = NULL;
+        }
+        if(cityB!=NULL) {
+            free(cityB);
+            cityB = NULL;
+        }
     }
     
     /*while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
