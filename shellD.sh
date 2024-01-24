@@ -16,7 +16,8 @@ processD2() {
     echo Process D2 on file $1
     now=`date +%s`
     
-    tail +2 $1 | awk -F';' '{sum[$6]+=$5} END {for (driver in sum) print sum[driver], driver}' | sort -k1nr | head -10 > temp/D2.txt
+    #LC_NUMERIC=C sets the awk to use a period . as the decimal separator.
+    tail +2 $1 | LC_NUMERIC=C awk -F';' '{sum[$6]+=$5} END {for (driver in sum) printf "%f, %s\n", sum[driver], driver}' | sort -k1nr | head -10 > temp/D2.txt
 
     nowB=`date +%s`
 
@@ -28,7 +29,7 @@ processL() {
     echo Process L on file $1
     now=`date +%s`
     
-    tail +2 $1 | awk -F';' '{sum[$1]+=$5} END {for (driver in sum) print sum[driver], driver}' | sort -k1nr | head -10 > temp/D3.txt
+    tail +2 $1 | LC_NUMERIC=C awk -F';' '{sum[$1]+=$5} END {for (driver in sum) print sum[driver], driver}' | sort -k1nr | head -10 | sort -k2n > temp/D3.txt
 
     nowB=`date +%s`
 
