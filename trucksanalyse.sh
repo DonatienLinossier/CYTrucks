@@ -93,6 +93,10 @@ if [ "${settingsVar[3]}" -eq 1 ]; then
     processL $filename
 fi
 
+if [ "${settingsVar[4]}" -eq 1 ]; then
+    processT $filename
+fi
+
 
 
 
