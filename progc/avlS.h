@@ -9,7 +9,7 @@ typedef struct nodeS{//Declares the nodeS structure used for AVL trees
     int key;
     struct nodeS* left;
     struct nodeS* right;
-    int min,max,total,num_steps;
+    int min,max,total,num_steps,height;
 }NodeS;
 
 NodeS* newNodeS(int route_id, int distance){//Creates a new NodeS with "a" as a key
@@ -18,8 +18,17 @@ NodeS* newNodeS(int route_id, int distance){//Creates a new NodeS with "a" as a 
     n->left = n->right = NULL;
     n->min = n->max = n->total = distance;
     n->num_steps=1;
+    n->height=0;
     return n;
 }
+
+void printNodeS(NodeS* n){
+    if(n==NULL){
+        printf("NULL\n");
+    }
+    printf("Routeid=%d min=%d max=%d total=%d num_steps=%d\n",n->key,n->min,n->max,n->total,n->num_steps);
+}
+
 
 
 void inOrderS(NodeS* n){//Displays the values in the AVL tree in ascending order
@@ -49,17 +58,9 @@ int heightS(NodeS* n){//Returns the height of the AVL tree(Max number of sons)
 
 int balanceS(NodeS* n){//Returns the balance of the AVL Tree(height of its right branch - height of its left branch, should be between -1 and 1)
     if(n==NULL){
-        exit(1);
+        return(0);
     }
-    if(n->right == NULL && n->left == NULL){
-        return 0;
-    }
-    else if(n->right == NULL){
-        return -heightS(n->left);
-    }
-    else if(n->left == NULL){
-        return heightS(n->right);
-    }
+
     else{
         return(heightS(n->right)-heightS(n->left));
     }
@@ -91,59 +92,82 @@ NodeS* doubleRightRotateS(NodeS* n){//To use when the left branch is too heavy a
     return rightRotateS(n);
 }
 
-NodeS* addNodeS(NodeS* n, int route_id, int distance){//Adds a NodeS of key v to the AVL Tree, then fixes the balance of the tree using rotations if needed
-    if (n==NULL){
-        NodeS * new_node=newNodeS(route_id, distance);
-        return new_node;
+NodeS* addNodeS(NodeS* node, int route_id, int distance){
+/* 1.  Perform the normal BST insertion */
+    if (node == NULL)
+        printf("z1\n");
+        return(newNodeS(route_id, distance)); 
+  
+    if (route_id < node->key){
+        printf("z2\n");
+        node->left  = addNodeS(node->left, route_id, distance);
+    } 
+    else if (route_id > node->key){
+        printf("z3\n");
+        node->right = addNodeS(node->right, route_id, distance); 
     }
-    if (route_id < n->key){
-        n->left = addNodeS(n->left, route_id, distance);
-    
-        if(balanceS(n)<=-2){
-            if(route_id < n->left->key){
-                n = rightRotateS(n);
-            }
-            else {
-                n = doubleRightRotateS(n);
-            }
-        }
+    else{ // Equal keys are not allowed in BST 
+        printf("z4\n");
+        return node;
     }
-    else if (route_id > n->key){
-        n->right = addNodeS(n->right, route_id, distance);
-        if(balanceS(n)>=2){
-            if(route_id > n->right->key){
-                n = leftRotateS(n);
-            }
-            else {
-                n = doubleLeftRotateS(n);
-            }
-        }
+  
+    /* 2. Update height of this ancestor node */
+    node->height = 1 + fmax(node->left->height, node->right->height); 
+  
+    /* 3. Get the balance factor of this ancestor 
+          node to check whether this node became 
+          unbalanced */
+    int balance = balanceS(node);
+    printf("z5\n");
+  
+    // If this node becomes unbalanced, then 
+    // there are 4 cases 
+  
+    // Left Left Case 
+    if (balance > 1 && route_id < node->left->key){
+        printf("z6\n");
+        return rightRotateS(node); 
     }
-    else{
-        n->num_steps+=1;
-        n->total+=distance;
-        if(distance < n->min){
-            n->min=distance;
-        }
-        else if(distance > n->max){
-            n->max = distance;
-        }
+  
+    // Right Right Case 
+    if (balance < -1 && route_id > node->right->key){
+        printf("z7\n");
+        return leftRotateS(node);
     }
-    return n;
+  
+    // Left Right Case 
+    if (balance > 1 && route_id > node->left->key) 
+    { 
+        printf("z8\n");
+        return doubleRightRotateS(node);
+    } 
+  
+    // Right Left Case 
+    if (balance < -1 && route_id < node->right->key) 
+    { 
+        printf("z9\n");
+        return doubleLeftRotateS(node);
+    } 
+  
+    /* return the (unchanged) node pointer */
+    printf("z10\n");
+    return node; 
 }
 
 
-// Function to perform in-order traversal and find the nodes with the highest B values
+// Function to perform in-order traversal and find the nodes with the highest differences between min and max
 void getMaxRangeValues(NodeS* root, int* count, NodeS* maxRangeNodes[], int maxRangeValues[]) {
     if (root != NULL) {
+        printf("g1\n");
         // Traverse the right subtree first
         getMaxRangeValues(root->right, count, maxRangeNodes, maxRangeValues);
-
-        // Check if the current node has a higher B value than the current minimum in the top 10
-        if (*count < 10 || (root->max-root->min) > maxRangeValues[9]) {
-            // Insert the current node into the top 10
+        printf("g2\n");
+        if ((root->max-root->min) > maxRangeValues[49]) {
+            // Insert the current node into the top 50
             int i = *count;
-            while (i > 0 && (i >= 10 || (root->max-root->min) > maxRangeValues[i - 1])) {
+            printf("g3\n");
+            while (i > 0 && (i >= 50 || (root->max-root->min) > maxRangeValues[i - 1])) {
+                printf("g4\n");
                 
                 maxRangeValues[i] = maxRangeValues[i - 1];
                 printf("%d\n",*count);
@@ -151,17 +175,19 @@ void getMaxRangeValues(NodeS* root, int* count, NodeS* maxRangeNodes[], int maxR
                 maxRangeNodes[i] = maxRangeNodes[i - 1];
                 i--;
             }
-            printf("e\n");
+            printf("g5\n");
             maxRangeValues[i] = (root->max-root->min);
             maxRangeNodes[i] = root;
 
             // Update the count
             printf("%d\n",*count);
             (*count)++;
+            printf("g6\n");
         }
-
+        printf("g7\n");
         // Traverse the left subtree
         getMaxRangeValues(root->left, count, maxRangeNodes, maxRangeValues);
+        printf("g8\n");
     }
 }
 

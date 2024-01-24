@@ -1,6 +1,5 @@
 #include "avlS.h"
 #include "avlT.h"
-#include "avlT2.h"
 #include "inputFile.h"
 
 void processS(){
@@ -20,11 +19,10 @@ void processS(){
     float distance;
     fgets(buffer, sizeof(buffer), fptr); //get first line
     NodeS* root = NULL;
-    int aaaa=0;
     while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
-        //printf("%d\n",aaaa);
-        aaaa+=1;
+        printf("a1\n");
         getDataForS(buffer, &route_id, &distance);
+        printf("a2\n");
         /*
         if(route_id!=NULL) {
             free(route_id);
@@ -35,19 +33,20 @@ void processS(){
             distance = NULL;
         }*/
         root = addNodeS(root,route_id,distance);
+        printf("a3\n");
     }
     printf("%d\n",heightS(root));
 
-    int count = 0;
-    NodeS* maxRangeNodes[10];
-    int maxRangeValues[10];
-
-    getMaxRangeValues(root, &count, maxRangeNodes, maxRangeValues);
+    int* count = 0;
+    NodeS* maxRangeNodes[50];
+    int maxRangeValues[50];
+    printf("a9\n");
+    getMaxRangeValues(root, count, maxRangeNodes, maxRangeValues);
     printf("z\n");
 
     // Print the results
-    for (int i = 0; i < count; i++) {
-        printf("RouteID %d: max=%d, min=%d, moyenne=%d\n", maxRangeNodes[i]->key, maxRangeNodes[i]->max, maxRangeNodes[i]->min, maxRangeNodes[i]->total/maxRangeNodes[i]->num_steps);
+    for (int i = 0; i < *count; i++) {
+        printf("NUM=%d :RouteID=%d, max=%d, min=%d, moyenne=%d\n",i, maxRangeNodes[i]->key, maxRangeNodes[i]->max, maxRangeNodes[i]->min, maxRangeNodes[i]->total/maxRangeNodes[i]->num_steps);
     }
 
 
