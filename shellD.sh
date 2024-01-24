@@ -31,11 +31,11 @@ processL() {
     echo Process L on file $1
     now=`date +%s`
     
-    tail +2 $1 | LC_NUMERIC=C awk -F';' '{sumTrajet[$1]+=$5} END {for (trajet in sumTrajet) print "%f;%s\n", sumTrajet[trajet], trajet}' | sort -k1nr | head -10 | sort -k2n > temp/D3.txt
+    tail +2 $1 | LC_NUMERIC=C awk -F';' '{sumTrajet[$1]+=$5} END {for (trajet in sumTrajet) print "%f;%s\n", sumTrajet[trajet], trajet}' | sort -k1nr | head -10 | sort -k2n > temp/L.txt
 
     nowB=`date +%s`
 
-    cat < temp/D3.txt # La anto
+    cat < temp/L.txt # La anto
  
     echo "Process lasted $((nowB - now)) seconds."
 }
