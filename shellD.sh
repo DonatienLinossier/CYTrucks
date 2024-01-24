@@ -53,11 +53,50 @@ processT() {
     #PB : marseille peut apparaitre pls fois dans un meme trajet. (DOnc vérifier que chaque n'a jamais été vu ) !seen[$1,$3]
 
 
-    tail +2 $1 | awk -F';' '{if ($2==1) nbdb[$3]++;} {!seen[$1,$4]++ sum[$4]++} END {for (driver in sum) printf "%d;%d;%s\n", sum[driver]+nbdb[driver], 0+nbdb[driver], driver}' > temp/TtempC.txt
+    #tail +2 $1 | awk -F';' '{if ($2==1) nbdb[$3]++;} {!seen[$1,$4]++ sum[$4]++} END {for (driver in sum) printf "%d;%d;%s\n", sum[driver]+nbdb[driver], 0+nbdb[driver], driver}' > temp/TtempC.txt
     #Il reste à enlever le cas ou la ville de départ du trajet est une ville par laquelle on repasse par la suite
     #Le cas on ou passe 2 fois par une ville dans le trajet(hors ville de départ est géré)
 
 
+
+
+    #Proposition de solution, A TESTER !!
+
+    #Si stepID == 1 (donc premiere etape d'un trajet) {
+    #   +1 au nombre fois que la villeA est ville départ
+    #   +1 au nombre de fois que la villeA est traversée
+    #   ajout du duo [cityA($3), ROUTEID]
+    #}
+    #
+    #Si duo [cityB($4), ROUTEID] jamais vu {
+    #   +1 au nombre de fois que la villeB est traversée
+    #   ajout du duo [cityB($3), ROUTEID]
+    #}
+    #Une fois le traitement fini
+    #For chaque ville
+    #   printf "%d;%d;%s", nbOfTraject[city], 0+nbdb[city], city
+    tail +2 $1 | awk -F';'
+    '{
+        if($2==1)
+        {
+            nbdb[$3]++;
+            nbOfTraject[$3]++;
+            seen[$3;$1]++;
+        }
+
+        if(!seen[$4;$1])
+        {
+            nbOfTraject[$4]++;
+            seen[$4;$1]++;
+        }
+        END 
+        {
+            for (city in nbOfTraject)
+            {
+                printf "%d:%d;%s", nbOfTraject[city], 0+nbdb[city], city
+            }
+        }
+    }' > temp/TtempC.txt
 
     #Lancer le vrai traitement ici
 
