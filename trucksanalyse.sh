@@ -70,31 +70,29 @@ done
 
 
 
+#Choice
 if [ "${settingsVar[0]}" -eq 1 ]; then
     printHelp 0
-fi
+else 
+    if [ "${settingsVar[1]}" -eq 1 ]; then
+        processD1 $filename
+    fi
 
+    if [ "${settingsVar[2]}" -eq 1 ]; then
+        processD2 $filename
+    fi
 
+    if [ "${settingsVar[3]}" -eq 1 ]; then
+        processL $filename
+    fi
 
+    if [ "${settingsVar[4]}" -eq 1 ]; then
+        processT $filename
+    fi
 
-
-
-#Traitements
-
-if [ "${settingsVar[1]}" -eq 1 ]; then
-    processD1 $filename
-fi
-
-if [ "${settingsVar[2]}" -eq 1 ]; then
-    processD2 $filename
-fi
-
-if [ "${settingsVar[3]}" -eq 1 ]; then
-    processL $filename
-fi
-
-if [ "${settingsVar[4]}" -eq 1 ]; then
-    processT $filename
+    if [ "${settingsVar[5]}" -eq 1 ]; then
+        processS $filename
+    fi
 fi
 
 
