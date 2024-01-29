@@ -7,29 +7,33 @@
 #include <string.h>
 
 typedef struct nodeT{//Declares the NodeT structure used for AVL trees
-    char* key;
+    int key;
     struct nodeT* left;
     struct nodeT* right;
-    int num_steps;
+    char* city;
     int num_firsts;
+    int height;
 }NodeT;
 
-NodeT* newNodeT(char* city_name){//Creates a new NodeT with the city_name as a key
+NodeT* newNodeT(char* city_name, int num_steps, int firsts){//Creates a new NodeT with the city_name as a key
     NodeT* n = malloc(sizeof(NodeT));
-    n->key=city_name;
+    n->key=num_steps;
     n->left = n->right = NULL;
-    n->num_steps = 1;
-    n->num_firsts = 0;
+    n->city = city_name;
+    n->num_firsts = firsts;
+    n->height=0;
     return n;
 }
 
 
 void inOrderT(NodeT* n){//Displays the values in the AVL tree in ascending order
+    printf("n0\n");
     if(n==NULL){
+        printf("n1\n");
         return;
     }
     inOrderT(n->left);
-    printf("%s\n",n->key);
+    printf("City:%s Steps:%d Firsts:%d\n",n->city,n->key,n->num_firsts);
     inOrderT(n->right);
     return;
 }
@@ -51,20 +55,22 @@ int heightT(NodeT* n){//Returns the height of the AVL tree(Max number of sons)
 
 int balanceT(NodeT* n){//Returns the balance of the AVL Tree(height of its right branch - height of its left branch, should be between -1 and 1)
     if(n==NULL){
-        exit(1);
+        return(0);
     }
-    if(n->right == NULL && n->left == NULL){
-        return 0;
-    }
-    else if(n->right == NULL){
-        return -heightT(n->left);
-    }
-    else if(n->left == NULL){
-        return heightT(n->right);
-    }
+
     else{
         return(heightT(n->right)-heightT(n->left));
     }
+}
+
+int getMinT(NodeT* n){
+    if(n==NULL){
+        exit(1);
+    }
+    if(n->left==NULL){
+        return n->key;
+    }
+    return getMinT(n->left);
 }
 
 //Rotations are used to balance the AVL Tree when it is unbalanced by shifting the NodeTs
@@ -93,44 +99,65 @@ NodeT* doubleRightRotateT(NodeT* n){//To use when the left branch is too heavy a
     return rightRotateT(n);
 }
 
-NodeT* addStepT(NodeT* n, char* city, int first_step){//Adds a NodeT of key v to the AVL Tree, then fixes the balance of the tree using rotations if needed
-    if (n==NULL){
-        NodeT* new_node=newNodeT(city);
-        new_node->num_firsts=first_step;
-        return new_node;
+NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts){
+/* 1.  Perform the normal BST insertion */
+    if (node == NULL)
+        printf("z1\n");
+        return(newNodeT(city_name, num_steps, num_firsts)); 
+  
+    if (num_steps < node->key){
+        printf("z2\n");
+        node->left  = addNodeT(node->left, city_name, num_steps, num_firsts);
+    } 
+    else if (num_steps > node->key){
+        printf("z3\n");
+        node->right = addNodeT(node->right, city_name, num_steps, num_firsts); 
     }
-    int str_comp=strcmp(city, n->key);
-
-    if(str_comp==0){
-        n->num_steps+=1;
-        n->num_firsts+=first_step;
+    else{ // Equal keys are not allowed in BST 
+        printf("z4\n");
+        return node;
     }
-
-    else if (str_comp<0){
-        n->left = addStepT(n->left, city, first_step);
-    
-        if(balanceT(n)<=-2){
-            if(strcmp(city, n->left->key) < 0){
-                
-                n = rightRotateT(n);
-            }
-            else {
-                n = doubleRightRotateT(n);
-            }
-        }
+  
+    /* 2. Update height of this ancestor node */
+    node->height = 1 + fmax(node->left->height, node->right->height); 
+  
+    /* 3. Get the balance factor of this ancestor 
+          node to check whether this node became 
+          unbalanced */
+    int balance = balanceT(node);
+    printf("z5\n");
+  
+    // If this node becomes unbalanced, then 
+    // there are 4 cases 
+  
+    // Left Left Case 
+    if (balance > 1 && num_steps < node->left->key){
+        printf("z6\n");
+        return rightRotateT(node); 
     }
-    else if (str_comp>0){
-        n->right = addStepT(n->right, city, first_step);
-        if(balanceT(n)>=2){
-            if(strcmp(city, n->right->key) > 0){
-                n = leftRotateT(n);
-            }
-            else {
-                n = doubleLeftRotateT(n);
-            }
-        }
+  
+    // Right Right Case 
+    if (balance < -1 && num_steps > node->right->key){
+        printf("z7\n");
+        return leftRotateT(node);
     }
-    return n;
+  
+    // Left Right Case 
+    if (balance > 1 && num_steps > node->left->key) 
+    { 
+        printf("z8\n");
+        return doubleRightRotateT(node);
+    } 
+  
+    // Right Left Case 
+    if (balance < -1 && num_steps < node->right->key) 
+    { 
+        printf("z9\n");
+        return doubleLeftRotateT(node);
+    } 
+  
+    /* return the (unchanged) node pointer */
+    printf("z10\n");
+    return node; 
 }
-
 #endif //PROCESST_H

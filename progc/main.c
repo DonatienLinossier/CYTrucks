@@ -4,7 +4,7 @@
 
 int main(){
 
-    processS();
+    processT();
 
     return 0;
 }

@@ -6,4 +6,6 @@
 
 void processS();
 
+void processT();
+
 #endif //PROCESSES_H

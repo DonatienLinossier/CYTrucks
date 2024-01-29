@@ -56,3 +56,44 @@ void processS(){
     fclose(fptr);
     return;
 }
+
+void processT(){
+    char bufferb[4096]; // Assuming a reasonable buffer size
+
+    FILE *fptr;
+
+    // Open a file in read mode
+    char buffer[100];
+    //fptr = fopen("sample.csv", "r"); 
+    fptr = fopen("TtempC.txt", "r"); 
+    if(fptr==NULL) {
+        printf("NULL");
+        exit(0);
+    }
+
+
+    int num_steps = 0;
+    int num_firsts = 0;
+    char* city = NULL;
+    int min=0;
+    int size_avl=0;
+
+    printf("TEST");
+    fgets(buffer, sizeof(buffer), fptr); //get first line
+    printf("ccc\n");
+    NodeT* root = NULL;
+    while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
+        printf("bbb\n");
+        getDataForTFromPreTreatment(buffer, &city, &num_steps, &num_firsts);
+        printf("%s %d %d\n", city, num_steps, num_firsts);
+        if(size_avl<10 || num_steps > min){
+            if(size_avl<10)size_avl+=1;
+            addNodeT(root,city,num_steps,num_firsts);
+            min=getMinT(root);
+        }
+        free(city);
+        city = NULL;
+    }
+    inOrderT(root);
+    
+}
