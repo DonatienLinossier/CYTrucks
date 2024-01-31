@@ -42,17 +42,20 @@ void inOrderS(NodeS* n){//Displays the values in the AVL tree in ascending order
 }
 
 int heightS(NodeS* n){//Returns the height of the AVL tree(Max number of sons)
-    if(n->right == NULL && n->left == NULL){
+    if(n==NULL){
+        return 0;
+    }
+    else if(n->right == NULL && n->left == NULL){
         return 1;
     }
     else if(n->right == NULL){
-        return 1+heightS(n->left);
+        return 1+n->left->height;
     }
     else if(n->left == NULL){
-        return 1+heightS(n->right);
+        return 1+n->right->height;
     }
     else{
-        return 1+fmax(heightS(n->left),heightS(n->right));
+        return 1+fmax(n->left->height, n->right->height);
     }
 }
 
@@ -62,133 +65,147 @@ int balanceS(NodeS* n){//Returns the balance of the AVL Tree(height of its right
     }
 
     else{
-        return(heightS(n->right)-heightS(n->left));
+        return (heightS(n->right)-heightS(n->left));
     }
 }
 
 //Rotations are used to balance the AVL Tree when it is unbalanced by shifting the NodeSs
 
-NodeS* rightRotateS(NodeS* n){//To use when the right branch is too heavy and straight
-    NodeS* u = n->left;
-    n->left = u->right;
-    u->right = n;
-    return u;
+NodeS* rightRotateS(NodeS* y){//To use when the right branch is too heavy and straight
+    NodeS* x = y->left;
+    NodeS* T2 = x->right;
+
+    x->right = y;
+    y->left = T2;
+
+    y->height = heightS(y);
+    x->height = heightS(x);
 }
 
-NodeS* leftRotateS(NodeS* n){//To use when the left branch is too heavy and straight
-    NodeS* u = n->right;
-    n->right = u->left;
-    u->left = n;
-    return u;
-}
+NodeS* leftRotateS(NodeS* x){//To use when the left branch is too heavy and straight
+    NodeS* y = x->right;
+    NodeS* T2 = y->left;
 
-NodeS* doubleLeftRotateS(NodeS* n){//To use when the right branch is too heavy and is bended
-    n->right = rightRotateS(n->right);
-    return leftRotateS(n);
-}
+    y->left = x;
+    x->right = T2;
 
-NodeS* doubleRightRotateS(NodeS* n){//To use when the left branch is too heavy and is bended
-    n->left = leftRotateS(n->left);
-    return rightRotateS(n);
+    x->height = heightS(x);
+    y->height = heightS(y);
 }
 
 NodeS* addNodeS(NodeS* node, int route_id, int distance){
-/* 1.  Perform the normal BST insertion */
+// Find the correct position to addNodeS the node and addNodeS it
     if (node == NULL)
-        printf("z1\n");
-        return(newNodeS(route_id, distance)); 
-  
-    if (route_id < node->key){
-        printf("z2\n");
-        node->left  = addNodeS(node->left, route_id, distance);
-    } 
-    else if (route_id > node->key){
-        printf("z3\n");
-        node->right = addNodeS(node->right, route_id, distance); 
-    }
-    else{ // Equal keys are not allowed in BST 
-        printf("z4\n");
+        return newNodeS(route_id, distance);
+
+    if (route_id < node->key)
+        node->left = addNodeS(node->left, route_id, distance);
+    else if (route_id > node->key)
+        node->right = addNodeS(node->right, route_id, distance);
+    else{
+        if(distance<node->min)node->min=distance;
+        else if(distance>node->max)node->max=distance;
+        node->total+=distance;
+        node->num_steps+=1;
         return node;
     }
-  
-    /* 2. Update height of this ancestor node */
-    node->height = 1 + fmax(node->left->height, node->right->height); 
-  
-    /* 3. Get the balance factor of this ancestor 
-          node to check whether this node became 
-          unbalanced */
+
+    // Balance the tree
+    node->height = heightS(node);
+
     int balance = balanceS(node);
-    printf("z5\n");
-  
-    // If this node becomes unbalanced, then 
-    // there are 4 cases 
-  
-    // Left Left Case 
-    if (balance > 1 && route_id < node->left->key){
-        printf("z6\n");
-        return rightRotateS(node); 
+
+    if (balance < -1 && route_id < node->left->key)
+        return rightRotateS(node);
+
+    if (balance > 1 && route_id > node->right->key)
+        return leftRotateS(node);
+
+    if (balance < -1 && route_id > node->left->key) {
+        node->left = leftRotateS(node->left);
+        return rightRotateS(node);
     }
-  
-    // Right Right Case 
-    if (balance < -1 && route_id > node->right->key){
-        printf("z7\n");
+
+    if (balance > 1 && route_id < node->right->key) {
+        node->right = rightRotateS(node->right);
         return leftRotateS(node);
     }
-  
-    // Left Right Case 
-    if (balance > 1 && route_id > node->left->key) 
-    { 
-        printf("z8\n");
-        return doubleRightRotateS(node);
-    } 
-  
-    // Right Left Case 
-    if (balance < -1 && route_id < node->right->key) 
-    { 
-        printf("z9\n");
-        return doubleLeftRotateS(node);
-    } 
-  
-    /* return the (unchanged) node pointer */
-    printf("z10\n");
-    return node; 
+
+    //printf("return\n");
+    return node;
 }
 
 
-// Function to perform in-order traversal and find the nodes with the highest differences between min and max
-void getMaxRangeValues(NodeS* root, int* count, NodeS* maxRangeNodes[], int maxRangeValues[]) {
-    if (root != NULL) {
-        printf("g1\n");
-        // Traverse the right subtree first
-        getMaxRangeValues(root->right, count, maxRangeNodes, maxRangeValues);
-        printf("g2\n");
-        if ((root->max-root->min) > maxRangeValues[49]) {
-            // Insert the current node into the top 50
-            int i = *count;
-            printf("g3\n");
-            while (i > 0 && (i >= 50 || (root->max-root->min) > maxRangeValues[i - 1])) {
-                printf("g4\n");
-                
-                maxRangeValues[i] = maxRangeValues[i - 1];
-                printf("%d\n",*count);
-                printf("f\n");
-                maxRangeNodes[i] = maxRangeNodes[i - 1];
-                i--;
-            }
-            printf("g5\n");
-            maxRangeValues[i] = (root->max-root->min);
-            maxRangeNodes[i] = root;
+int compareRanges(const void* c, const void* d) {
+    const NodeS* a = *(const NodeS **)c;
+    const NodeS* b = *(const NodeS **)d;
+    return b->max - b->min - (a->max - a->min);
+}
 
-            // Update the count
-            printf("%d\n",*count);
+void findRanges(NodeS* root, NodeS** maxRanges, int* count) {
+    if (root != NULL) {
+        findRanges(root->left, maxRanges, count);
+
+        // Update maxRanges array with the current node
+        if (*count < 50) {
+            maxRanges[*count] = root;
             (*count)++;
-            printf("g6\n");
+        } else {
+            // Check if the current node has a higher range than the lowest range in maxRanges
+            if ((root->max - root->min) > (maxRanges[49]->max - maxRanges[49]->min)) {
+                maxRanges[49] = root;
+                qsort(maxRanges, 50, sizeof(NodeS*), compareRanges);
+            }
         }
-        printf("g7\n");
-        // Traverse the left subtree
-        getMaxRangeValues(root->left, count, maxRangeNodes, maxRangeValues);
-        printf("g8\n");
+
+        findRanges(root->right, maxRanges, count);
     }
+}
+
+void findRangesIterative(NodeS* root, NodeS** maxRanges, int* count) {
+    NodeS* current = root;
+    NodeS* stack[100]; // Adjust the size as needed
+    int top = -1;
+
+    while (current != NULL || top >= 0) {
+        while (current != NULL) {
+            stack[++top] = current;
+            current = current->left;
+        }
+
+        current = stack[top--];
+
+        // Update maxRanges array with the current node
+        if (*count < 50) {
+            maxRanges[*count] = current;
+            (*count)++;
+        } else {
+            // Check if the current node has a higher range than the lowest range in maxRanges
+            if ((current->max - current->min) > (maxRanges[49]->max - maxRanges[49]->min)) {
+                maxRanges[49] = current;
+
+                // Perform insertion sort for the updated element
+                for (int i = 48; i >= 0 && (maxRanges[i]->max - maxRanges[i]->min) < (maxRanges[i + 1]->max - maxRanges[i + 1]->min); i--) {
+                    NodeS* temp = maxRanges[i];
+                    maxRanges[i] = maxRanges[i + 1];
+                    maxRanges[i + 1] = temp;
+                }
+            }
+        }
+
+        current = current->right;
+    }
+}
+
+
+NodeS** getMaxRanges(NodeS* root, int* count) {
+    NodeS** maxRanges = (NodeS**)malloc(50 * sizeof(NodeS*));
+    *count = 0;
+
+    //findRanges(root, maxRanges, count);
+    findRanges(root, maxRanges, count);
+
+    return maxRanges;
 }
 
 

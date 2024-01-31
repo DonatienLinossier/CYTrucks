@@ -27,9 +27,7 @@ NodeT* newNodeT(char* city_name, int num_steps, int firsts){//Creates a new Node
 
 
 void inOrderT(NodeT* n){//Displays the values in the AVL tree in ascending order
-    printf("n0\n");
     if(n==NULL){
-        printf("n1\n");
         return;
     }
     inOrderT(n->left);
@@ -39,17 +37,20 @@ void inOrderT(NodeT* n){//Displays the values in the AVL tree in ascending order
 }
 
 int heightT(NodeT* n){//Returns the height of the AVL tree(Max number of sons)
-    if(n->right == NULL && n->left == NULL){
+    if(n==NULL){
+        return 0;
+    }
+    else if(n->right == NULL && n->left == NULL){
         return 1;
     }
     else if(n->right == NULL){
-        return 1+heightT(n->left);
+        return 1+n->left->height;
     }
     else if(n->left == NULL){
-        return 1+heightT(n->right);
+        return 1+n->right->height;
     }
     else{
-        return 1+fmax(heightT(n->left),heightT(n->right));
+        return 1+fmax(n->left->height, n->right->height);
     }
 }
 
@@ -59,7 +60,7 @@ int balanceT(NodeT* n){//Returns the balance of the AVL Tree(height of its right
     }
 
     else{
-        return(heightT(n->right)-heightT(n->left));
+        return (heightT(n->right)-heightT(n->left));
     }
 }
 
@@ -75,89 +76,63 @@ int getMinT(NodeT* n){
 
 //Rotations are used to balance the AVL Tree when it is unbalanced by shifting the NodeTs
 
-NodeT* rightRotateT(NodeT* n){//To use when the right branch is too heavy and straight
-    NodeT* u = n->left;
-    n->left = u->right;
-    u->right = n;
-    return u;
+NodeT* rightRotateT(NodeT* y){//To use when the right branch is too heavy and straight
+    NodeT* x = y->left;
+    NodeT* T2 = x->right;
+
+    x->right = y;
+    y->left = T2;
+
+    y->height = heightT(y);
+    x->height = heightT(x);
 }
 
-NodeT* leftRotateT(NodeT* n){//To use when the left branch is too heavy and straight
-    NodeT* u = n->right;
-    n->right = u->left;
-    u->left = n;
-    return u;
-}
+NodeT* leftRotateT(NodeT* x){//To use when the left branch is too heavy and straight
+    NodeT* y = x->right;
+    NodeT* T2 = y->left;
 
-NodeT* doubleLeftRotateT(NodeT* n){//To use when the right branch is too heavy and is bended
-    n->right = rightRotateT(n->right);
-    return leftRotateT(n);
-}
+    y->left = x;
+    x->right = T2;
 
-NodeT* doubleRightRotateT(NodeT* n){//To use when the left branch is too heavy and is bended
-    n->left = leftRotateT(n->left);
-    return rightRotateT(n);
+    x->height = heightT(x);
+    y->height = heightT(y);
 }
 
 NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts){
-/* 1.  Perform the normal BST insertion */
+    // Find the correct position to addNodeT the node and addNodeT it
     if (node == NULL)
-        printf("z1\n");
-        return(newNodeT(city_name, num_steps, num_firsts)); 
-  
-    if (num_steps < node->key){
-        printf("z2\n");
-        node->left  = addNodeT(node->left, city_name, num_steps, num_firsts);
-    } 
-    else if (num_steps > node->key){
-        printf("z3\n");
-        node->right = addNodeT(node->right, city_name, num_steps, num_firsts); 
+        return newNodeT(city_name, num_steps, num_firsts);
+    if (num_steps < node->key)
+        node->left = addNodeT(node->left, city_name, num_steps, num_firsts);
+    else if (num_steps > node->key)
+        node->right = addNodeT(node->right, city_name, num_steps, num_firsts);
+    else{
+        
     }
-    else{ // Equal keys are not allowed in BST 
-        printf("z4\n");
-        return node;
-    }
-  
-    /* 2. Update height of this ancestor node */
-    node->height = 1 + fmax(node->left->height, node->right->height); 
-  
-    /* 3. Get the balance factor of this ancestor 
-          node to check whether this node became 
-          unbalanced */
+
+    // Balance the tree
+    node->height = heightT(node);
+
     int balance = balanceT(node);
-    printf("z5\n");
-  
-    // If this node becomes unbalanced, then 
-    // there are 4 cases 
-  
-    // Left Left Case 
-    if (balance > 1 && num_steps < node->left->key){
-        printf("z6\n");
-        return rightRotateT(node); 
+
+    if (balance < -1 && num_steps < node->left->key)
+        return rightRotateT(node);
+
+    if (balance > 1 && num_steps > node->right->key)
+        return leftRotateT(node);
+
+    if (balance < -1 && num_steps > node->left->key) {
+        node->left = leftRotateT(node->left);
+        return rightRotateT(node);
     }
-  
-    // Right Right Case 
-    if (balance < -1 && num_steps > node->right->key){
-        printf("z7\n");
+
+    if (balance > 1 && num_steps < node->right->key) {
+        node->right = rightRotateT(node->right);
         return leftRotateT(node);
     }
-  
-    // Left Right Case 
-    if (balance > 1 && num_steps > node->left->key) 
-    { 
-        printf("z8\n");
-        return doubleRightRotateT(node);
-    } 
-  
-    // Right Left Case 
-    if (balance < -1 && num_steps < node->right->key) 
-    { 
-        printf("z9\n");
-        return doubleLeftRotateT(node);
-    } 
-  
-    /* return the (unchanged) node pointer */
-    printf("z10\n");
-    return node; 
+
+    //printf("return\n");
+    return node;
 }
+
 #endif //PROCESST_H
