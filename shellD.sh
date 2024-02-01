@@ -177,25 +177,10 @@ processS() {
 
 
     echo Process S on file $1
-    now=`date +%s`
-
-    echo 'not done yet'
-
-    nowB=`date +%s`
-    echo "Process lasted $((nowB - now)) seconds."
-}
-
-
-tplot=tplot.txt
-tPlotOutput=tPlotOutput.png
-plot_option_t=plot_option_t.plt
-TtempC=TtempC.txt
-
-    echo Process S on file $1
     startTime
 
     if [ ! -f "$EXECUTABLE" ]; then
-        gcc -o ./progc/EXEC ./progc/main.c ./progc/avlT.h ./progc/inputFile.c ./progc/processes.h -lm
+        gcc -o ./progc/EXEC ./progc/main.c ./progc/processes.c ./progc/inputFile.c  ./progc/avlT.c ./progc/avlS.c ./progc/processes.h ./progc/inputFile.h ./progc/avlT.h ./progc/avlS.h ./progc/processes.h -lm
     fi
 
 
@@ -206,6 +191,11 @@ TtempC=TtempC.txt
 
     gnuplot -e "filename='temp/Splot.txt'" -e "out='images/sPlotOutput.png'" plot/plot_option_s.plt
 }
+
+TtempC=TtempC.txt
+Tplot="Tplot.txt"
+tPlotOutput="tPlotOutput.png"
+plot_option_t="plot_option_t.plt"
 
 processT() {
 
@@ -259,6 +249,10 @@ processT() {
         }
     }' > $temp$TtempC
 
-    nowB=`date +%s`
-    echo "Process lasted $((nowB - now)) seconds."
+   ./progc/EXEC $temp$TtempC 1 > $temp$Tplot
+
+
+    exitTime 0
+
+    gnuplot -e "filename='$temp$Tplot'" -e "out='$images$tPlotOutput'" "$plot$plot_option_t"
 }
