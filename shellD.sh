@@ -94,7 +94,7 @@ processT() {
     }
     END {
         for (city in nbOfTraject) {
-            printf "%d:%d;%s\n", nbOfTraject[city], 0+nbdb[city], city;
+            printf "%d;%d;%s\n", nbOfTraject[city], 0+nbdb[city], city;
         }
     }' > temp/TtempC.txt
 
