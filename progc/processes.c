@@ -2,14 +2,14 @@
 #include "avlT.h"
 #include "inputFile.h"
 
-void processS(){
+void processS(char * link){
     char bufferb[4096]; // Assuming a reasonable buffer size
 
     FILE *fptr;
 
     // Open a file in read mode
     char buffer[100];
-    fptr = fopen("./data/data.csv", "r"); 
+    fptr = fopen(link, "r"); 
     if(fptr==NULL) {
         printf("NULL\n");
         exit(0);
@@ -39,7 +39,7 @@ void processS(){
     return;
 }
 
-void processT(){
+void processT(char * link){
     char bufferb[4096]; // Assuming a reasonable buffer size
 
     FILE *fptr;
@@ -47,7 +47,7 @@ void processT(){
     // Open a file in read mode
     char buffer[100];
     //fptr = fopen("sample.csv", "r"); 
-    fptr = fopen("TtempC.txt", "r"); 
+    fptr = fopen(link, "r"); 
     if(fptr==NULL) {
         printf("NULL");
         exit(0);

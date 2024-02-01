@@ -4,8 +4,8 @@
 #include "processes.c"
 #include "inputFile.h"
 
-void processS();
+void processS(char * link);
 
-void processT();
+void processT(char * link);
 
 #endif //PROCESSES_H

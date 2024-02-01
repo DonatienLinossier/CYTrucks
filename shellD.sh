@@ -77,7 +77,7 @@ processS() {
     fi
 
 
-    ./progc/EXEC > temp/Splot.txt
+    ./progc/EXEC $1 0 > temp/Splot.txt
 
 
     exitTime 0
@@ -89,7 +89,7 @@ processT() {
 
 
     echo Process T on file $1
-    now=`date +%s`
+    startTime
 
 
     #PreTreatement
