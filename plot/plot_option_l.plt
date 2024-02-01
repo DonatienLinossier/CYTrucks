@@ -1,6 +1,11 @@
+if (!exists("filename")) filename='data/data_l.dat'
+
+if (!exists("out")) out='output/output_option_l.png'
+
 set term pngcairo enhanced size 1200,1000
-set output 'output/output_option_l.png'
+set output out
 set encoding utf8
+
 
 set margins 10, 10, 7, 5
 set yrange [0:3000]
@@ -19,6 +24,6 @@ set xlabel "ROUTE ID" font ",15" offset 0,-1
 
 
 set datafile separator ";"
-plot 'data/data_l.dat' using 2:xtic(1) lc "#00ffff" notitle with boxes
+plot filename using 1:xtic(2) lc "#00ffff" notitle with boxes
 
 set output

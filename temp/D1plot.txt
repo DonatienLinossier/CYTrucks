@@ -1,0 +1,10 @@
+2;Angela JOHANSSON
+2;Sergey NAGY
+1;Aleksandra JIMENEZ
+1;Aleksandr DIAZ
+1;Aleksandr SMITH
+1;Aleksey PETROVA
+1;Alina RICHTER
+1;Andreas COSTA
+1;Andreas KOVALENKO
+1;Andreas SCHÄFER

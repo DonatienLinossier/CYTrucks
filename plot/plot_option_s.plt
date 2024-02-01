@@ -1,6 +1,11 @@
+if (!exists("filename")) filename='data/data_s.dat'
+
+if (!exists("out")) out='output/output_option_s.png'
+
 set term pngcairo enhanced size 1600,1200
-set output 'output/output_option_s.png'
+set output out
 set encoding utf8
+
 
 set margins 7, 5, 5, 5
 set style data lines
@@ -19,7 +24,7 @@ set ytics 100
 
 
 set datafile separator ";"
-plot 'data/data_s.dat' using 1:3:5 with filledcurves lc "#00ffff" t "Distances Max/Min (Km)", \
+plot filename using 1:3:5 with filledcurves lc "#00ffff" t "Distances Max/Min (Km)", \
 	'' using 1:4 linecolor -1 t "Distances average (Km)" ,\
 	'' using 1:2:xticlabels(2) notitle 
 

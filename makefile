@@ -16,7 +16,7 @@
 #    |   |-- bin/
 #    |       |-- (Executable file goes here after compilation)
 #    |
-#    |-- GNUPlot/
+#    |-- plot/
 #    |   |-- (Scripts for GNUPlot rendering)
 #    |
 #    |-- data/
@@ -69,6 +69,8 @@ cleanTemp :
 	rm -f $(TEMP_DIR)/*
 
 cleanImages :
+# on copie le dossier images dans demo 
+# question enregistre t-on plusieurs demos ??
 	rm -f $(IMAGES_DIR)/*
 
 cleanDemo : 

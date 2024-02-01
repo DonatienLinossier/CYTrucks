@@ -1,2 +1,0 @@
-To do : 
-    -In truckAnalyse.sh: Verify if the file actualy is a .csv, and if the first line contains the expected coloumns 

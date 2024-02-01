@@ -1,6 +1,12 @@
+if (!exists("filename")) filename='data/data_t.dat'
+
+if (!exists("out")) out='output/output_option_t.png'
+
 set term pngcairo enhanced size 1200,1000
-set output 'output/output_option_t.png'
+set output out
 set encoding utf8
+
+
 
 set margins 10, 10, 7, 5
 set yrange [-10:6000]
@@ -23,6 +29,6 @@ set xlabel "TOWN NAMES" font ",15" offset 0,-1
 
 
 set datafile separator ";"
-plot 'data/data_t.dat' using 2:xtic(1) lc "#00ffff" t "Total routes" , '' using 3 lc "#00bfff" t "First town" 
+plot filename using 2:xtic(1) lc "#00ffff" t "Total routes" , '' using 3 lc "#00bfff" t "First town" 
 
 set output

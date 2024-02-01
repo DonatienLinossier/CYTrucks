@@ -4,7 +4,7 @@ source constant.sh
 
 printHelp() {
         cat printSH/printHelp.txt | sed "s#\\*#$0#g"
-        exitTime $1
+        exitTime $1 ## fonction a disparue
 }
 
 
@@ -23,7 +23,7 @@ if [ -f "$filename" ]; then
     fi
 else
     echo "File $filename does not exist."
-    exit 1
+    printHelp 1
 fi 
 
 
@@ -70,31 +70,29 @@ done
 
 
 
+#Choice
 if [ "${settingsVar[0]}" -eq 1 ]; then
     printHelp 0
-fi
+else 
+    if [ "${settingsVar[1]}" -eq 1 ]; then
+        processD1 $filename
+    fi
 
+    if [ "${settingsVar[2]}" -eq 1 ]; then
+        processD2 $filename
+    fi
 
+    if [ "${settingsVar[3]}" -eq 1 ]; then
+        processL $filename
+    fi
 
+    if [ "${settingsVar[4]}" -eq 1 ]; then
+        processT $filename
+    fi
 
-
-
-#Traitements
-
-if [ "${settingsVar[1]}" -eq 1 ]; then
-    processD1 $filename
-fi
-
-if [ "${settingsVar[2]}" -eq 1 ]; then
-    processD2 $filename
-fi
-
-if [ "${settingsVar[3]}" -eq 1 ]; then
-    processL $filename
-fi
-
-if [ "${settingsVar[4]}" -eq 1 ]; then
-    processT $filename
+    if [ "${settingsVar[5]}" -eq 1 ]; then
+        processS $filename
+    fi
 fi
 
 
