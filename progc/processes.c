@@ -9,7 +9,7 @@ void processS(){
 
     // Open a file in read mode
     char buffer[100];
-    fptr = fopen("../data/data.csv", "r"); 
+    fptr = fopen("./data/data.csv", "r"); 
     if(fptr==NULL) {
         printf("NULL\n");
         exit(0);
@@ -21,31 +21,19 @@ void processS(){
     NodeS* root = NULL;
     while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
         getDataForS(buffer, &route_id, &distance);
-        //inOrderS(root);
-        /*
-        if(route_id!=NULL) {
-            free(route_id);
-            route_id = NULL;
-        }
-        if(distance!=NULL) {
-            free(distance);
-            distance = NULL;
-        }*/
+        
         root = addNodeS(root,route_id,distance);
     }
-    printf("height:%d\n",heightS(root));
+
     int count;
     NodeS** maxRangesArray = getMaxRanges(root, &count);
     qsort(maxRangesArray, 50, sizeof(NodeS*), compareRanges);
 
    
-    printf("count:%d\n",count);
-
      // Access the nodes with the highest ranges using maxRangesArray[i]
     for (int i = 0; i < count; ++i) {
-        printf("%d;%d;%f;%f;%f\n",i+1,maxRangesArray[i]->min,maxRangesArray[i]->total/maxRangesArray[i]->num_steps,maxRangesArray[i]->max maxRangesArray[i]->key, maxRangesArray[i]->max - maxRangesArray[i]->min);
+        printf("%d;%d;%f;%f;%f;%f\n",i+1,maxRangesArray[i]->key, maxRangesArray[i]->min,maxRangesArray[i]->total/maxRangesArray[i]->num_steps,maxRangesArray[i]->max, maxRangesArray[i]->max - maxRangesArray[i]->min);
     }
-    printf("yoooo\n");
 
     fclose(fptr);
     return;

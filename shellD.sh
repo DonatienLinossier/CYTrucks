@@ -1,6 +1,6 @@
 #!/bin/bash
 temp=temp/
-EXECUTABLE = ./progc/EXEC.exe
+EXECUTABLE="/progc/EXEC"
 
 
 
@@ -72,13 +72,17 @@ processS() {
     echo Process S on file $1
     startTime
 
-    if[! EXECUTABLE -e ];then
-        make compile
+    if [ ! -f "$EXECUTABLE" ]; then
+        gcc -o ./progc/EXEC ./progc/main.c ./progc/avlT.h ./progc/inputFile.c ./progc/processes.h -lm
     fi
 
-    EXECUTABLE 1
+
+    ./progc/EXEC > temp/Splot.txt
+
 
     exitTime 0
+
+    gnuplot -e "filename='temp/Splot.txt'" -e "out='images/sPlotOutput.png'" plot/plot_option_s.plt
 }
 
 processT() {
