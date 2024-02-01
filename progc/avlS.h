@@ -27,7 +27,7 @@ void printNodeS(NodeS* n){
     if(n==NULL){
         printf("NULL\n");
     }
-    printf("Routeid=%d min=%d max=%d total=%d num_steps=%d\n",n->key,n->min,n->max,n->total,n->num_steps);
+    printf("Routeid=%d min=%f max=%f total=%f num_steps=%d\n",n->key,n->min,n->max,n->total,n->num_steps);
 }
 
 
