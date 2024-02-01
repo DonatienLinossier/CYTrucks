@@ -43,7 +43,7 @@ void processS(){
 
      // Access the nodes with the highest ranges using maxRangesArray[i]
     for (int i = 0; i < count; ++i) {
-        printf("Node %d with range %f\n", maxRangesArray[i]->key, maxRangesArray[i]->max - maxRangesArray[i]->min);
+        printf("%d;%d;%f;%f;%f\n",i+1,maxRangesArray[i]->min,maxRangesArray[i]->total/maxRangesArray[i]->num_steps,maxRangesArray[i]->max maxRangesArray[i]->key, maxRangesArray[i]->max - maxRangesArray[i]->min);
     }
     printf("yoooo\n");
 
