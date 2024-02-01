@@ -66,6 +66,7 @@ void processT(){
     int num_steps = 0;
     int num_firsts = 0;
     char* city = NULL;
+    int values[10]={0};
     int min=0;
     int size_avl=0;
 
@@ -73,15 +74,20 @@ void processT(){
     NodeT* root = NULL;
     while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
         getDataForTFromPreTreatment(buffer, &city, &num_steps, &num_firsts);
-        //printf("%s %d %d\n", city, num_steps, num_firsts);
-        if(size_avl<10 || num_steps > min){
-            if(size_avl<10)size_avl+=1;
-            if(num_steps>min)min=num_steps;
+        if(size_avl<10 || num_steps > values[min]){
+            size_avl+=1;
+            if(num_steps>values[min]){
+                values[min]=num_steps;
+                min=getMin(values,10);
+            }
             root = addNodeT(root,city,num_steps,num_firsts);
         }
         free(city);
         city = NULL;
     }
-    inOrderT(root);
+    int count=0;
+    inOrderT(root,&count);
     
+    freeNodeT(root);
+    fclose(fptr);
 }

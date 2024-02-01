@@ -9,21 +9,22 @@ NodeT* newNodeT(char* city_name, int num_steps, int firsts){//Creates a new Node
     NodeT* n = malloc(sizeof(NodeT));
     n->key=num_steps;
     n->left = n->right = NULL;
-    n->city = city_name;
+    n->city = malloc(strlen(city_name) + 1);
+    strcpy(n->city, city_name);
     n->num_firsts = firsts;
     n->height=0;
     return n;
 }
 
 
-void inOrderT(NodeT* n){//Displays the values in the AVL tree in ascending order
-    if(n==NULL){
-        return;
+void inOrderT(NodeT* n, int* count) {
+    if (n == NULL || *count >= 10) return;
+    inOrderT(n->right, count);
+    if (*count < 10) {
+        printf("%s;%d;%d\n", n->city, n->key, n->num_firsts);
+        *count += 1;
     }
-    inOrderT(n->left);
-    printf("City:%s Steps:%d Firsts:%d\n",n->city,n->key,n->num_firsts);
-    inOrderT(n->right);
-    return;
+    inOrderT(n->left, count);
 }
 
 int heightT(NodeT* n){//Returns the height of the AVL tree(Max number of sons)
@@ -54,14 +55,19 @@ int balanceT(NodeT* n){//Returns the balance of the AVL Tree(height of its right
     }
 }
 
-int getMinT(NodeT* n){
-    if(n==NULL){
+int getMin(int array[],int length){
+    if(array==NULL){
         exit(1);
     }
-    if(n->left==NULL){
-        return n->key;
+    int minIndex=0;
+    int minValue=array[0];
+    for(int i = 1; i<length;i++){
+        if(array[i]<minValue){
+            minValue=array[i];
+            minIndex=i;
+        }
     }
-    return getMinT(n->left);
+    return minIndex;
 }
 
 //Rotations are used to balance the AVL Tree when it is unbalanced by shifting the NodeTs
@@ -90,6 +96,15 @@ NodeT* leftRotateT(NodeT* x){//To use when the left branch is too heavy and stra
     y->height = heightT(y);
 
     return y;
+}
+
+void freeNodeT(NodeT* node) {
+    if (node == NULL) return;
+    
+    freeNodeT(node->left);
+    freeNodeT(node->right);
+    free(node->city);  // Free the allocated memory for the city name
+    free(node);
 }
 
 NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts){
