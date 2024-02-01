@@ -1,6 +1,4 @@
-#include "avlS.h"
-#include "avlT.h"
-#include "inputFile.h"
+#include "processes.h"
 
 void processS(){
     char bufferb[4096]; // Assuming a reasonable buffer size
@@ -57,9 +55,8 @@ void processT(){
     FILE *fptr;
 
     // Open a file in read mode
-    char buffer[100];
-    //fptr = fopen("sample.csv", "r"); 
-    fptr = fopen("TtempC.txt", "r"); 
+    char buffer[100]; 
+    fptr = fopen("../temp/TtempC.txt", "r"); 
     if(fptr==NULL) {
         printf("NULL");
         exit(0);
@@ -73,7 +70,6 @@ void processT(){
     int size_avl=0;
 
     fgets(buffer, sizeof(buffer), fptr); //get first line
-    printf("aaa\n");
     NodeT* root = NULL;
     while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
         getDataForTFromPreTreatment(buffer, &city, &num_steps, &num_firsts);
@@ -86,7 +82,6 @@ void processT(){
         free(city);
         city = NULL;
     }
-    printf("zzz\n");
     inOrderT(root);
     
 }

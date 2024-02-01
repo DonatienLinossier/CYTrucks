@@ -1,5 +1,6 @@
-#include "processes.h"
 #include "inputFile.h"
+#include "processes.h"
+
 
 
 int main(){
