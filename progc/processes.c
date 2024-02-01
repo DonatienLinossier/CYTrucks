@@ -9,7 +9,7 @@ void processS(){
 
     // Open a file in read mode
     char buffer[100];
-    fptr = fopen("../data/data10k.csv", "r"); 
+    fptr = fopen("../data/data.csv", "r"); 
     if(fptr==NULL) {
         printf("NULL\n");
         exit(0);
@@ -21,6 +21,7 @@ void processS(){
     NodeS* root = NULL;
     while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
         getDataForS(buffer, &route_id, &distance);
+        //inOrderS(root);
         /*
         if(route_id!=NULL) {
             free(route_id);
@@ -32,7 +33,6 @@ void processS(){
         }*/
         root = addNodeS(root,route_id,distance);
     }
-    printf("aaaaaa\n");
     printf("height:%d\n",heightS(root));
     int count;
     NodeS** maxRangesArray = getMaxRanges(root, &count);
@@ -43,15 +43,10 @@ void processS(){
 
      // Access the nodes with the highest ranges using maxRangesArray[i]
     for (int i = 0; i < count; ++i) {
-        printf("Node %d with range %d\n", maxRangesArray[i]->key, maxRangesArray[i]->max - maxRangesArray[i]->min);
+        printf("Node %d with range %f\n", maxRangesArray[i]->key, maxRangesArray[i]->max - maxRangesArray[i]->min);
     }
-
     printf("yoooo\n");
 
-
-    
-
-    
     fclose(fptr);
     return;
 }
