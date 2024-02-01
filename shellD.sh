@@ -5,6 +5,29 @@ images=images/
 
 
 
+EXECUTABLE="/progc/EXEC"
+
+
+#test
+startTime() {
+        start_time=`date +%s.%N`
+}
+
+exitTime() {
+        end_time=`date +%s.%N`
+        x=$(echo "$end_time - $start_time" | bc)
+                
+        if [ "$(echo "$x<1" | bc)" -eq 1 ];then
+                echo execution time was 0$x s 
+        else
+                echo execution time was $x s 
+        fi
+
+        if [ "$1" -eq 1 ]; then
+            exit 1
+        else echo
+        fi
+}
 
 D1plot=D1plot.txt
 d1PlotOutput=d1PlotOutput.png
@@ -23,6 +46,12 @@ processD1() {
     fi
 
     echo Process D1 on file $1
+    
+    startTime
+
+    tail +2 $1 | awk -F';' '!seen[$1,$6]++ {count[$6]++} END {for (driver in count) printf "%d;%s\n", count[driver], driver}' | sort  -t ";" -k1nr | head -10 > temp/D1plot.txt
+    
+    exitTime 0
     now=`date +%s`
     
     tail +2 $1 | awk -F';' '!seen[$1,$6]++ {count[$6]++} END {for (driver in count) printf "%d;%s\n", count[driver], driver}' | sort  -t ";" -k1nr | head -10 > $temp$D1plot
@@ -34,12 +63,7 @@ processD1() {
 
     nowB=`date +%s`
 
-    gnuplot -e "filename='$temp$D1plot'" -e "out='$images$d1PlotOutput'" $plot$plot_option_d1
-
-    if [ ! -f "$images$d1PlotOutput" ]; then
-        echo "Error: couldn't generate $images$d1PlotOutput."
-        return 1
-    fi
+    gnuplot -e "filename='temp/D1plot.txt'" -e "out='images/d1PlotOutput.png'" plot/plot_option_d1.plt
 
     mogrify -rotate 90 "$images$d1PlotOutput"
 
@@ -68,7 +92,8 @@ processD2() {
 
 
     echo Process D2 on file $1
-    now=`date +%s`
+
+    startTime
     
     tail +2 $1 | LC_NUMERIC=C awk -F';' '{sum[$6]+=$5} END {for (driver in sum) printf "%f;%s\n", sum[driver], driver}' | sort -t ";" -k1nr | head -10 > $temp$D2plot
 
@@ -77,15 +102,11 @@ processD2() {
         return 1
     fi
 
-    nowB=`date +%s`
+    exitTime 0
 
-    gnuplot -e "filename='$temp$D2plot'" -e "out='$images$d2PlotOutput'" $plot$plot_option_d2
-
-    if [ ! -f "$images$d2PlotOutput" ]; then
-        echo "Error: couldn't generate $images$d2PlotOutput."
-        return 1
-    fi
-    mogrify -rotate 90 "$images$d2PlotOutput"
+    gnuplot -e "filename='temp/D2plot.txt'" -e "out='images/d2PlotOutput.png'" plot/plot_option_d2.plt
+    
+    mogrify -rotate 90 'images/d2PlotOutput.png'
 
     echo "Process lasted $((nowB - now)) seconds."
 }
@@ -112,7 +133,8 @@ processL() {
 
 
     echo Process L on file $1
-    now=`date +%s`
+
+    startTime
     
     tail +2 $1 | LC_NUMERIC=C awk -F';' '{sumTrajet[$1]+=$5} END {for (trajet in sumTrajet) printf "%f;%s\n", sumTrajet[trajet], trajet}' | sort -t ";" -k1nr | head -10 | sort -t ";" -k2n > $temp$lplot
 
@@ -121,7 +143,7 @@ processL() {
         return 1
     fi
 
-    nowB=`date +%s`
+    exitTime 0
 
     if [ ! -f "$images$lPlotOutput" ]; then
         echo "Error: couldn't generate $images$lPlotOutput."

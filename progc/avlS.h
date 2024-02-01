@@ -9,10 +9,11 @@ typedef struct nodeS{//Declares the nodeS structure used for AVL trees
     int key;
     struct nodeS* left;
     struct nodeS* right;
-    int min,max,total,num_steps,height;
+    float min,max,total;
+    int num_steps,height;
 }NodeS;
 
-NodeS* newNodeS(int route_id, int distance){//Creates a new NodeS with "a" as a key
+NodeS* newNodeS(int route_id, float distance){//Creates a new NodeS with "a" as a key
     NodeS* n = malloc(sizeof(NodeS));
     n->key=route_id;
     n->left = n->right = NULL;
@@ -26,7 +27,7 @@ void printNodeS(NodeS* n){
     if(n==NULL){
         printf("NULL\n");
     }
-    printf("Routeid=%d min=%d max=%d total=%d num_steps=%d\n",n->key,n->min,n->max,n->total,n->num_steps);
+    printf("Routeid=%d min=%f max=%f total=%f num_steps=%d\n",n->key,n->min,n->max,n->total,n->num_steps);
 }
 
 
@@ -80,6 +81,8 @@ NodeS* rightRotateS(NodeS* y){//To use when the right branch is too heavy and st
 
     y->height = heightS(y);
     x->height = heightS(x);
+
+    return x;
 }
 
 NodeS* leftRotateS(NodeS* x){//To use when the left branch is too heavy and straight
@@ -91,17 +94,21 @@ NodeS* leftRotateS(NodeS* x){//To use when the left branch is too heavy and stra
 
     x->height = heightS(x);
     y->height = heightS(y);
+
+    return y;
 }
 
-NodeS* addNodeS(NodeS* node, int route_id, int distance){
+NodeS* addNodeS(NodeS* node, int route_id, float distance){
 // Find the correct position to addNodeS the node and addNodeS it
-    if (node == NULL)
+    if (node == NULL){
         return newNodeS(route_id, distance);
-
-    if (route_id < node->key)
+    }
+    if (route_id < node->key){
         node->left = addNodeS(node->left, route_id, distance);
-    else if (route_id > node->key)
+    }
+    else if (route_id > node->key){
         node->right = addNodeS(node->right, route_id, distance);
+    }
     else{
         if(distance<node->min)node->min=distance;
         else if(distance>node->max)node->max=distance;
@@ -115,11 +122,13 @@ NodeS* addNodeS(NodeS* node, int route_id, int distance){
 
     int balance = balanceS(node);
 
-    if (balance < -1 && route_id < node->left->key)
+    if (balance < -1 && route_id < node->left->key){
         return rightRotateS(node);
+    }
 
-    if (balance > 1 && route_id > node->right->key)
+    if (balance > 1 && route_id > node->right->key){
         return leftRotateS(node);
+    }
 
     if (balance < -1 && route_id > node->left->key) {
         node->left = leftRotateS(node->left);
