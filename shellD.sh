@@ -1,5 +1,6 @@
 #!/bin/bash
 temp=temp/
+EXECUTABLE = ./progc/EXEC.exe
 
 
 
@@ -71,6 +72,11 @@ processS() {
     echo Process S on file $1
     startTime
 
+    if[! EXECUTABLE -e ];then
+        make compile
+    fi
+
+    EXECUTABLE 1
 
     exitTime 0
 }
