@@ -3,7 +3,7 @@ temp=temp/
 EXECUTABLE="/progc/EXEC"
 
 
-
+#test
 startTime() {
         start_time=`date +%s.%N`
 }
