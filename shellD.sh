@@ -1,47 +1,68 @@
 #!/bin/bash
 temp=temp/
 
+
+
+startTime() {
+        start_time=`date +%s.%N`
+}
+
+exitTime() {
+        end_time=`date +%s.%N`
+        x=$(echo "$end_time - $start_time" | bc)
+                
+        if [ "$(echo "$x<1" | bc)" -eq 1 ];then
+                echo execution time was 0$x s 
+        else
+                echo execution time was $x s 
+        fi
+
+        if [ "$1" -eq 1 ]; then
+            exit 1
+        else echo
+        fi
+}
+
 processD1() {
     echo Process D1 on file $1
-    now=`date +%s`
     
-    tail +2 $1 | awk -F';' '!seen[$1,$6]++ {count[$6]++} END {for (driver in count) printf "%d;%s\n", count[driver], driver}' | sort  -t ";" -k1nr | head -10 > temp/D1plot.txt
+    startTime
 
-    nowB=`date +%s`
+    tail +2 $1 | awk -F';' '!seen[$1,$6]++ {count[$6]++} END {for (driver in count) printf "%d;%s\n", count[driver], driver}' | sort  -t ";" -k1nr | head -10 > temp/D1plot.txt
+    
+    exitTime 0
 
     gnuplot -e "filename='temp/D1plot.txt'" -e "out='images/d1PlotOutput.png'" plot/plot_option_d1.plt
 
     mogrify -rotate 90 'images/d1PlotOutput.png'
 
-    echo "Process lasted $((nowB - now)) seconds."
 }
 
 processD2() {
     echo Process D2 on file $1
-    now=`date +%s`
+
+    startTime
     
     tail +2 $1 | LC_NUMERIC=C awk -F';' '{sum[$6]+=$5} END {for (driver in sum) printf "%f;%s\n", sum[driver], driver}' | sort -t ";" -k1nr | head -10 > temp/D2plot.txt
 
-    nowB=`date +%s`
+    exitTime 0
 
     gnuplot -e "filename='temp/D2plot.txt'" -e "out='images/d2PlotOutput.png'" plot/plot_option_d2.plt
     
     mogrify -rotate 90 'images/d2PlotOutput.png'
 
-    echo "Process lasted $((nowB - now)) seconds."
 }
 
 processL() {
     echo Process L on file $1
-    now=`date +%s`
+
+    startTime
     
     tail +2 $1 | LC_NUMERIC=C awk -F';' '{sumTrajet[$1]+=$5} END {for (trajet in sumTrajet) printf "%f;%s\n", sumTrajet[trajet], trajet}' | sort -t ";" -k1nr | head -10 | sort -t ";" -k2n > temp/Lplot.txt
 
-    nowB=`date +%s`
+    exitTime 0
 
     gnuplot -e "filename='temp/Lplot.txt'" -e "out='images/lPlotOutput.png'" plot/plot_option_l.plt
- 
-    echo "Process lasted $((nowB - now)) seconds."
 }
 
 processS() {
