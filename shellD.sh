@@ -69,12 +69,10 @@ processS() {
 
 
     echo Process S on file $1
-    now=`date +%s`
+    startTime
 
-    echo 'not done yet'
 
-    nowB=`date +%s`
-    echo "Process lasted $((nowB - now)) seconds."
+    exitTime 0
 }
 
 processT() {
