@@ -1,5 +1,10 @@
 #!/bin/bash
 temp=temp/
+plot=plot/
+images=images/
+
+
+
 EXECUTABLE="/progc/EXEC"
 
 
@@ -24,7 +29,22 @@ exitTime() {
         fi
 }
 
+D1plot=D1plot.txt
+d1PlotOutput=d1PlotOutput.png
+plot_option_d1=plot_option_d1.plt
 processD1() {
+
+    # Check if input file is provided
+    if [ $# -ne 1 ]; then
+        echo "Usage: -d1 <input_file>"
+        return 1
+    fi
+
+    if [ ! -f "$1" ]; then
+        echo "Error: Input file '$1' not found."
+        return 1
+    fi
+
     echo Process D1 on file $1
     
     startTime
@@ -32,19 +52,55 @@ processD1() {
     tail +2 $1 | awk -F';' '!seen[$1,$6]++ {count[$6]++} END {for (driver in count) printf "%d;%s\n", count[driver], driver}' | sort  -t ";" -k1nr | head -10 > temp/D1plot.txt
     
     exitTime 0
+    now=`date +%s`
+    
+    tail +2 $1 | awk -F';' '!seen[$1,$6]++ {count[$6]++} END {for (driver in count) printf "%d;%s\n", count[driver], driver}' | sort  -t ";" -k1nr | head -10 > $temp$D1plot
+
+    if [ ! -f "$temp$D1plot" ]; then
+        echo "Error: couldn't generate $temp$D1plot."
+        return 1
+    fi
+
+    nowB=`date +%s`
 
     gnuplot -e "filename='temp/D1plot.txt'" -e "out='images/d1PlotOutput.png'" plot/plot_option_d1.plt
 
-    mogrify -rotate 90 'images/d1PlotOutput.png'
+    mogrify -rotate 90 "$images$d1PlotOutput"
 
+    echo "Process lasted $((nowB - now)) seconds."
 }
 
+
+
+
+
+D2plot=D2plot.txt
+d2PlotOutput=d2PlotOutput.png
+plot_option_d2=plot_option_d2.plt
 processD2() {
+
+    # Check if input file is provided
+    if [ $# -ne 1 ]; then
+        echo "Usage: -d2 <input_file>"
+        return 1
+    fi
+
+    if [ ! -f "$1" ]; then
+        echo "Error: Input file '$1' not found."
+        return 1
+    fi
+
+
     echo Process D2 on file $1
 
     startTime
     
-    tail +2 $1 | LC_NUMERIC=C awk -F';' '{sum[$6]+=$5} END {for (driver in sum) printf "%f;%s\n", sum[driver], driver}' | sort -t ";" -k1nr | head -10 > temp/D2plot.txt
+    tail +2 $1 | LC_NUMERIC=C awk -F';' '{sum[$6]+=$5} END {for (driver in sum) printf "%f;%s\n", sum[driver], driver}' | sort -t ";" -k1nr | head -10 > $temp$D2plot
+
+    if [ ! -f "$temp$D2plot" ]; then
+        echo "Error: couldn't generate $temp$D2plot."
+        return 1
+    fi
 
     exitTime 0
 
@@ -52,22 +108,88 @@ processD2() {
     
     mogrify -rotate 90 'images/d2PlotOutput.png'
 
+    echo "Process lasted $((nowB - now)) seconds."
 }
 
+
+
+
+
+lplot=lplot.txt
+lPlotOutput=lPlotOutput.png
+plot_option_l=plot_option_l.plt
 processL() {
+
+    # Check if input file is provided
+    if [ $# -ne 1 ]; then
+        echo "Usage: -l <input_file>"
+        return 1
+    fi
+
+    if [ ! -f "$1" ]; then
+        echo "Error: Input file '$1' not found."
+        return 1
+    fi
+
+
     echo Process L on file $1
 
     startTime
     
-    tail +2 $1 | LC_NUMERIC=C awk -F';' '{sumTrajet[$1]+=$5} END {for (trajet in sumTrajet) printf "%f;%s\n", sumTrajet[trajet], trajet}' | sort -t ";" -k1nr | head -10 | sort -t ";" -k2n > temp/Lplot.txt
+    tail +2 $1 | LC_NUMERIC=C awk -F';' '{sumTrajet[$1]+=$5} END {for (trajet in sumTrajet) printf "%f;%s\n", sumTrajet[trajet], trajet}' | sort -t ";" -k1nr | head -10 | sort -t ";" -k2n > $temp$lplot
+
+    if [ ! -f "$temp$lplot" ]; then
+        echo "Error: couldn't generate $temp$lplot."
+        return 1
+    fi
 
     exitTime 0
 
-    gnuplot -e "filename='temp/Lplot.txt'" -e "out='images/lPlotOutput.png'" plot/plot_option_l.plt
+    if [ ! -f "$images$lPlotOutput" ]; then
+        echo "Error: couldn't generate $images$lPlotOutput."
+        return 1
+    fi
+
+    gnuplot -e "filename='$temp$lplot'" -e "out='$images$lPlotOutput'" $plot$plot_option_l
+
+
+
+    echo "Process lasted $((nowB - now)) seconds."
 }
 
+
+
+splot=splot.txt
+sPlotOutput=sPlotOutput.png
+plot_option_s=plot_option_s.plt
 processS() {
 
+    # Check if input file is provided
+    if [ $# -ne 1 ]; then
+        echo "Usage: -s <input_file>"
+        return 1
+    fi
+
+    if [ ! -f "$1" ]; then
+        echo "Error: Input file '$1' not found."
+        return 1
+    fi
+
+
+    echo Process S on file $1
+    now=`date +%s`
+
+    echo 'not done yet'
+
+    nowB=`date +%s`
+    echo "Process lasted $((nowB - now)) seconds."
+}
+
+
+tplot=tplot.txt
+tPlotOutput=tPlotOutput.png
+plot_option_t=plot_option_t.plt
+TtempC=TtempC.txt
 
     echo Process S on file $1
     startTime
@@ -87,6 +209,16 @@ processS() {
 
 processT() {
 
+    # Check if input file is provided
+    if [ $# -ne 1 ]; then
+        echo "Usage: -t <input_file>"
+        return 1
+    fi
+
+    if [ ! -f "$1" ]; then
+        echo "Error: Input file '$1' not found."
+        return 1
+    fi
 
     echo Process T on file $1
     startTime
@@ -123,9 +255,9 @@ processT() {
     }
     END {
         for (city in nbOfTraject) {
-            printf "%d:%d;%s\n", nbOfTraject[city], 0+nbdb[city], city;
+            printf "%d;%d;%s\n", nbOfTraject[city], 0+nbdb[city], city;
         }
-    }' > temp/TtempC.txt
+    }' > $temp$TtempC
 
     nowB=`date +%s`
     echo "Process lasted $((nowB - now)) seconds."
