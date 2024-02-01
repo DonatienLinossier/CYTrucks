@@ -3,10 +3,12 @@ temp=temp/
 plot=plot/
 images=images/
 
+
+
+
 D1plot=D1plot.txt
 d1PlotOutput=d1PlotOutput.png
 plot_option_d1=plot_option_d1.plt
-
 processD1() {
 
     # Check if input file is provided
@@ -43,6 +45,9 @@ processD1() {
 
     echo "Process lasted $((nowB - now)) seconds."
 }
+
+
+
 
 
 D2plot=D2plot.txt
@@ -86,6 +91,9 @@ processD2() {
 }
 
 
+
+
+
 lplot=lplot.txt
 lPlotOutput=lPlotOutput.png
 plot_option_l=plot_option_l.plt
@@ -127,11 +135,16 @@ processL() {
     echo "Process lasted $((nowB - now)) seconds."
 }
 
+
+
+splot=splot.txt
+sPlotOutput=sPlotOutput.png
+plot_option_s=plot_option_s.plt
 processS() {
 
     # Check if input file is provided
     if [ $# -ne 1 ]; then
-        echo "Usage: -d2 <input_file>"
+        echo "Usage: -s <input_file>"
         return 1
     fi
 
@@ -150,11 +163,16 @@ processS() {
     echo "Process lasted $((nowB - now)) seconds."
 }
 
+
+tplot=tplot.txt
+tPlotOutput=tPlotOutput.png
+plot_option_t=plot_option_t.plt
+TtempC=TtempC.txt
 processT() {
 
     # Check if input file is provided
     if [ $# -ne 1 ]; then
-        echo "Usage: -d2 <input_file>"
+        echo "Usage: -t <input_file>"
         return 1
     fi
 
@@ -200,7 +218,7 @@ processT() {
         for (city in nbOfTraject) {
             printf "%d:%d;%s\n", nbOfTraject[city], 0+nbdb[city], city;
         }
-    }' > temp/TtempC.txt
+    }' > $temp$TtempC
 
     nowB=`date +%s`
     echo "Process lasted $((nowB - now)) seconds."
