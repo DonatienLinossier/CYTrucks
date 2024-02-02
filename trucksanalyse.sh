@@ -53,14 +53,15 @@ done
 if [ "${settingsVar[0]}" -eq 1 ]; then
     printHelp 1
 else 
-    if ((${settingsVar[1]} == 1 || ${settingsVar[2]} == 1 || ${settingsVar[3]} == 1)); then
-        if ((${settingsVar[4]} == 1 || ${settingsVar[5]} == 1)); then
-            if [ ! -f "$EXECUTABLE" ]; then
-                make #compile
-            fi
+    if ((${settingsVar[4]} == 1 || ${settingsVar[5]} == 1)); then
+        if [ ! -f ".$EXECUTABLE" ]; then
+            make cleanCompilation
+            make
         fi
-        make #remove
-    fi 
+    fi
+
+    make moveImagesToDemo
+    make cleanTemp
 
     if [ "${settingsVar[1]}" -eq 1 ]; then
         processD1 $filename

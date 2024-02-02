@@ -5,7 +5,7 @@ images=images/
 
 
 
-EXECUTABLE="/progc/EXEC"
+EXECUTABLE="/progc/bin/main"
 
 
 #test
@@ -170,7 +170,7 @@ processS() {
     echo Process S on file $1
     startTime
 
-    ./progc/EXEC $1 0 > temp/Splot.txt
+    ./progc/bin/main $1 0 > temp/Splot.txt
 
 
     exitTime 0
@@ -235,7 +235,7 @@ processT() {
         }
     }' > $temp$TtempC
 
-   ./progc/EXEC $temp$TtempC 1 > $temp$Tplot
+   ./progc/bin/main $temp$TtempC 1 > $temp$Tplot
 
 
     exitTime 0
