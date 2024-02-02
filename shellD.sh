@@ -57,7 +57,7 @@ processD1() {
     
     exitTime 0
   
-    gnuplot -e "filename='temp/D1plot.txt'" -e "out='images/d1PlotOutput.png'" plot/plot_option_d1.plt
+    gnuplot -e "filename='$temp$D1plot'" -e "out='$images$d1PlotOutput'" "$plot$plot_option_d1"
 
     mogrify -rotate 90 "$images$d1PlotOutput"
 
@@ -96,7 +96,7 @@ processD2() {
 
     exitTime 0
 
-    gnuplot -e "filename='temp/D2plot.txt'" -e "out='images/d2PlotOutput.png'" plot/plot_option_d2.plt
+    gnuplot -e "filename='$temp$D2plot'" -e "out='$images$d2PlotOutput'" "$plot$plot_option_d2"
     
     mogrify -rotate 90 'images/d2PlotOutput.png'
 
@@ -170,19 +170,18 @@ processS() {
     echo Process S on file $1
     startTime
 
-    ./progc/bin/main $1 0 > temp/Splot.txt
+    ./progc/bin/main $1 0 > $temp$splot
 
 
     exitTime 0
 
-    gnuplot -e "filename='temp/Splot.txt'" -e "out='images/sPlotOutput.png'" plot/plot_option_s.plt
+    gnuplot -e "filename='$temp$splot'" -e "out='$images$sPlotOutput'" "$plot$plot_option_s"
 }
 
 TtempC=TtempC.txt
 Tplot="Tplot.txt"
 tPlotOutput="tPlotOutput.png"
 plot_option_t="plot_option_t.plt"
-
 processT() {
 
     # Check if input file is provided
@@ -199,23 +198,7 @@ processT() {
     echo Process T on file $1
     startTime
 
-
-    #PreTreatement
-    #if stepID == 1 (is city first step?) {
-    #   +1 au nombre fois que la villeA est ville départ
-    #   Si duo [cityA($3), ROUTEID] jamais vu {
-    #       +1 au nombre de fois que la villeA est traversée
-    #       ajout du duo [cityA($3), ROUTEID]
-    #   }
-    #}
-    #
-    #Si duo [cityB($4), ROUTEID] jamais vu {
-    #   +1 au nombre de fois que la villeB est traversée
-    #   ajout du duo [cityB($3), ROUTEID]
-    #}
-    #Une fois le traitement fini
-    #For chaque ville
-    #   printf "%d;%d;%s", nbOfTraject[city], 0+nbdb[city], city
+    #Preprocess of treatment T
     tail +2 $1 | awk -F';' '{
         if ($2 == 1) {
             nbdb[$3]++;

@@ -110,7 +110,7 @@ cleanDemo :
 cleanImg :
 	rm -rf $(IMGDIR)/*
 
-clean: cleanCompilation cleanTemp cleanTemp cleanImg
+clean: cleanCompilation cleanTemp cleanTemp cleanImg cleanDemo
 
 moveImagesToDemo:
 	number=$$(ls -l $(DEMODIR) | grep "^d" | wc -l); \
