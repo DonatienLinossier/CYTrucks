@@ -1,7 +1,7 @@
 #!/bin/bash
 source constant.sh
 
-#test
+
 startTime() {
     start_time=$(date +%s.%N)
 }
@@ -20,7 +20,7 @@ exitTime() {
         echo "  Execution time was $elapsed_time s"
     fi
 
-    if [ "$1" -eq 1 ]; then
+    if [ $1 -eq 1 ]; then
         exit 1
     fi
 }
@@ -47,7 +47,12 @@ processD1() {
     tail +2 $1 | awk -F';' '!seen[$1,$6]++ {count[$6]++} END {for (driver in count) printf "%d;%s\n", count[driver], driver}' | sort  -t ";" -k1nr | head -10 > $temp/$D1plot
     
     exitTime 0
-  
+
+    if [ $? -eq 1 ]; then
+        echo "An error has occurred in -d1"
+        exit 1
+    fi
+
     gnuplot -e "filename='$temp/$D1plot'" -e "out='$images/$d1PlotOutput'" "$plot/$plot_option_d1"
 
     mogrify -rotate 90 "$images/$d1PlotOutput"
@@ -82,8 +87,14 @@ processD2() {
     startTime
     
     tail +2 $1 | LC_NUMERIC=C awk -F';' '{sum[$6]+=$5} END {for (driver in sum) printf "%f;%s\n", sum[driver], driver}' | sort -t ";" -k1nr | head -10 > $temp/$D2plot
+    
+    if [ $? -eq 1 ]; then
+        echo "An error has occurred in -d2"
+        exit 1
+    fi
 
     exitTime 0
+    
 
     gnuplot -e "filename='$temp/$D2plot'" -e "out='$images/$d2PlotOutput'" "$plot/$plot_option_d2"
     
@@ -119,6 +130,11 @@ processL() {
     startTime
     
     tail +2 $1 | LC_NUMERIC=C awk -F';' '{sumTrajet[$1]+=$5} END {for (trajet in sumTrajet) printf "%f;%s\n", sumTrajet[trajet], trajet}' | sort -t ";" -k1nr | head -10 | sort -t ";" -k2n > $temp/$lplot
+
+    if [ $? -eq 1 ]; then
+        echo "An error has occurred in -l"
+        exit 1
+    fi
 
     if [ ! -f "$temp/$lplot" ]; then
         echo "Error: generation failed for: $temp/$lplot."
@@ -156,6 +172,11 @@ processS() {
     startTime
 
     ./progc/bin/main $1 0 > $temp/$splot
+
+    if [ "$(head -n 1 "$temp/$splot")" = "1" ]; then
+        echo "An error has occurred in -s"
+        exit 1
+    fi
 
 
     exitTime 0
@@ -202,6 +223,10 @@ processT() {
 
    ./progc/bin/main $temp/$TtempC 1 > $temp/$Tplot
 
+    if [ "$(head -n 1 "$temp/$Tplot")" = "1" ]; then
+        echo "An error has occurred in -t"
+        exit 1
+    fi
 
     exitTime 0
 

@@ -1,4 +1,5 @@
 dataFolder="data"
+dataname="dataUse.csv"
 
 temp=temp
 plot=plot

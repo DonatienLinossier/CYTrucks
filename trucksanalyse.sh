@@ -3,7 +3,7 @@ source shellD.sh
 source constant.sh
 
 printHelp() {
-        cat printSH/printHelp.txt | sed "s#\\*#$0#g"
+        cat printSH/printHelp.txt | sed "s#\\*#$0#g" #print /printSH/printHelp.txt replacement of all the * by the file name
         exitTime $1
 }
 
@@ -16,17 +16,20 @@ if [ "$#" -eq 0 ]; then
     exit 1
 fi
 
-filename="$dataFolder/$1"
-if [ ! -f "$filename" ]; then
-    echo "File $filename does not exist."
-    printHelp 0
-    exit 1
-fi 
+#verrification 
+
+if [ ! -f "$1" ]; then
+    echo "File $1 does not exist."
+    printHelp 1 #put 1 in parrameter for exit
+else
+    cp $1 "$dataFolder/$dataname"
+fi
+filename="$dataFolder/$dataname"
 
 
 settingsVar=(0 0 0 0 0 0)
 
-#Recupérer les arguments
+#take arguments
 for arg in "$@"; do
     case $arg in
             "-h")
@@ -48,10 +51,9 @@ done
 
 #Choice
 if [ "${settingsVar[0]}" -eq 1 ]; then
-    printHelp 0
-    exit 1
+    printHelp 1
 else 
-    if ((${settingsVar[4]} == 1 || ${settingsVar[5]} == 1)); then
+    if ((${settingsVar[4]} == 1 || ${settingsVar[5]} == 1)); then #we compile for the modes who need c to be run
         if [ ! -f ".$EXECUTABLE" ]; then
             echo Compilation
             make cleanCompilation -s
@@ -60,7 +62,7 @@ else
             echo "  Compilation done."
         fi
     fi
-
+    #cleaning files
     make moveImagesToDemo -s
     make cleanTemp -s
     echo Cleaned temp/
