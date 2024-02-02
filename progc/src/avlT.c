@@ -110,7 +110,7 @@ void freeNodeT(NodeT* node) {
 int compareT(const void* c, const void* d) {
     const NodeT* a = *(const NodeT **)c;
     const NodeT* b = *(const NodeT **)d;
-    return strcmp(b->city,a->city);
+    return strcmp(a->city,b->city);
 }
 
 NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts){
