@@ -41,7 +41,7 @@ NodeT* leftRotateT(NodeT* x);
 NodeT* doubleRightRotateT(NodeT* n);
 
 // Right then left rotate to balance the AVL Tree when the left branch is too heavy but bended
-NodeT* doubleLeftRotateS(NodeT* n);
+NodeT* doubleLeftRotateT(NodeT* n);
 
 // Function that frees the entire AVL tree
 void freeNodeT(NodeT* node);

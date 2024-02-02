@@ -117,7 +117,7 @@ NodeT* doubleRightRotateT(NodeT* n){
 }
 
 // Right then left rotate to balance the AVL Tree when the left branch is too heavy but bended
-NodeT* doubleLeftRotateS(NodeT* n){
+NodeT* doubleLeftRotateT(NodeT* n){
     n->right = rightRotateT(n->right);
     return leftRotateT(n);
 }
@@ -161,7 +161,7 @@ NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts) {
         return leftRotateT(node);
 
     if (balance < -1 && num_steps > node->left->key)
-        return doubleRightRotateS(node);
+        return doubleRightRotateT(node);
 
     if (balance > 1 && num_steps < node->right->key)
         return doubleLeftRotateT(node);
