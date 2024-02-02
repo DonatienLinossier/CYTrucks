@@ -5,7 +5,7 @@ images=images/
 
 
 
-EXECUTABLE="./progc/EXEC"
+EXECUTABLE="/progc/EXEC"
 
 
 #test
