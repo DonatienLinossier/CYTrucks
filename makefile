@@ -35,7 +35,7 @@
 #    |-- Makefile
 #    |-- README.md
 
-.PHONY: moveImagesToDemo cleanCompilation cleanTemp cleanDemo cleanImg
+.PHONY: moveImagesToDemo cleanCompilation cleanTemp cleanDemo cleanImg clean
 
 
 # Compiler
@@ -110,8 +110,16 @@ cleanDemo :
 cleanImg :
 	rm -rf $(IMGDIR)/*
 
+clean: cleanCompilation cleanTemp cleanTemp cleanImg cleanDemo
+
 moveImagesToDemo:
-	number=$$(ls -l $(DEMODIR) | grep "^d" | wc -l); \
-	output="$(DEMODIR)/Output$$number"; \
-	mkdir -p "$$output"; \
-	mv images/* "$$output"
+	@echo "Moving files from last execution to $(DEMODIR)/OutputX"
+	@if [ -n "$$(ls -A $(IMGDIR))" ]; then \
+		number=$$(ls -l $(DEMODIR) | grep "^d" | wc -l); \
+		output="$(DEMODIR)/Output$$number"; \
+		mkdir -p "$$output"; \
+		mv images/* "$$output"; \
+		echo "  Files from $(IMGDIR) moved to $$output"; \
+	else \
+		echo "  No files from last execution. No files moved."; \
+    fi

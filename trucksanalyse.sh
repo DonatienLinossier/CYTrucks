@@ -4,7 +4,7 @@ source constant.sh
 
 printHelp() {
         cat printSH/printHelp.txt | sed "s#\\*#$0#g"
-        exitTime $1 ## fonction a disparue
+        exitTime $1
 }
 
 
@@ -17,13 +17,10 @@ if [ "$#" -eq 0 ]; then
 fi
 
 filename="$dataFolder/$1"
-if [ -f "$filename" ]; then
-    if [ "$DEBUG" -eq 1 ]; then 
-        echo "File $filename exists."
-    fi
-else
+if [ ! -f "$filename" ]; then
     echo "File $filename does not exist."
-    printHelp 1
+    printHelp 0
+    exit 1
 fi 
 
 
@@ -51,17 +48,23 @@ done
 
 #Choice
 if [ "${settingsVar[0]}" -eq 1 ]; then
-    printHelp 1
+    printHelp 0
+    exit 1
 else 
     if ((${settingsVar[4]} == 1 || ${settingsVar[5]} == 1)); then
         if [ ! -f ".$EXECUTABLE" ]; then
-            make cleanCompilation
-            make
+            echo Compilation
+            make cleanCompilation -s
+            echo "  Cleaned bin/ and build/"
+            make -s
+            echo "  Compilation done."
         fi
     fi
 
-    make moveImagesToDemo
-    make cleanTemp
+    make moveImagesToDemo -s
+    make cleanTemp -s
+    echo Cleaned temp/
+    echo 
 
     if [ "${settingsVar[1]}" -eq 1 ]; then
         processD1 $filename
