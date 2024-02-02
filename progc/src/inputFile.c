@@ -1,18 +1,6 @@
 #include "../include/inputFile.h"
 
-void getDataForT(const char* input, char** cityA, char** cityB, int* isFirst) {
-    char* token = strtok((char*)input, ";");//route ID
 
-
-    token = strtok((char*)NULL, ";");
-    *isFirst = atoi(token) == 1;
-
-    token = strtok((char*)NULL, ";");
-    *cityA = strdup(token);
-
-    token = strtok((char*)NULL, ";");
-    *cityB = strdup(token);
-}
 
 
 void getDataForTFromPreTreatment(const char* input, char** city, int* nbOfTraject, int* nbBeingStart) {
@@ -32,20 +20,6 @@ void getDataForTFromPreTreatment(const char* input, char** city, int* nbOfTrajec
     }
 }
 
-
-void getDataForS(const char* input, int* routeID, float* dist) {
-    char* token = strtok((char*)input, ";");//route ID
-    *routeID = atoi(token);
-
-    strtok(NULL, ";"); //StepID
-    strtok(NULL, ";"); //townA
-    strtok(NULL, ";"); //townB
-
-    token = strtok(NULL, ";"); //Dist
-    *dist = strtof(token, NULL);
-}
-
-
 void getDataForSbis(const char* input, int* routeID, float* dist) {
     // Parse routeID directly without tokenization
     *routeID = atoi(input);
@@ -60,9 +34,40 @@ void getDataForSbis(const char* input, int* routeID, float* dist) {
     }
 
     // Parse dist directly without tokenization
-    //printf("%s", input);
     *dist = strtof(input, NULL);
 }
+
+
+//Deprecated - is slower than getDataForSbis
+void getDataForS(const char* input, int* routeID, float* dist) {
+    char* token = strtok((char*)input, ";");//route ID
+    *routeID = atoi(token);
+
+    strtok(NULL, ";"); //StepID
+    strtok(NULL, ";"); //townA
+    strtok(NULL, ";"); //townB
+
+    token = strtok(NULL, ";"); //Dist
+    *dist = strtof(token, NULL);
+}
+
+void getDataForT(const char* input, char** cityA, char** cityB, int* isFirst) {
+    char* token = strtok((char*)input, ";");//route ID
+
+
+    token = strtok((char*)NULL, ";");
+    *isFirst = atoi(token) == 1;
+
+    token = strtok((char*)NULL, ";");
+    *cityA = strdup(token);
+
+    token = strtok((char*)NULL, ";");
+    *cityB = strdup(token);
+}
+
+
+
+
 
 /*
 #########################################"
@@ -70,7 +75,7 @@ void getDataForSbis(const char* input, int* routeID, float* dist) {
 ##########################################
 int main() {
 
-    char bufferb[4096]; // Assuming a reasonable buffer size
+    char bufferb[4096];
 
     FILE *fptr;
 
@@ -89,6 +94,8 @@ int main() {
     while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
         getDataForT(buffer, &cityA, &cityB, &isFirst);
         printf("%s %s %d\n", cityA, cityB, isFirst);
+
+        #/!\ Free cityA and cityB /!\
         if(cityA!=NULL) {
             free(cityA);
             cityA = NULL;
