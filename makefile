@@ -31,12 +31,13 @@
 #    |-- demo/
 #    |   |-- (Demo files go here | last executions)
 #    |
+#    |-- constant.sh
 #    |-- ShellD.sh	
 #    |-- truckAnalyse.sh	
 #    |-- Makefile
 #    |-- README.md
 
-.PHONY: moveImagesToDemo cleanCompilation cleanTemp cleanDemo cleanImg clean
+.PHONY: moveImagesToDemo cleanCompilation cleanTemp cleanDemo cleanImg clean createDir createCompDir createDataDir
 
 
 # Compiler
@@ -76,7 +77,11 @@ $(EXEC): $(OBJS)
 $(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+createCompDir: $(OBJDIR) $(BINDIR)
 
+createDir: $(IMGDIR) $(TEMPDIR) $(DEMODIR)
+
+createDataDir: $(DATADIR)
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
@@ -95,6 +100,7 @@ $(DATADIR):
 
 $(TEMPDIR):
 	mkdir -p $(TEMPDIR)
+
 
 
 

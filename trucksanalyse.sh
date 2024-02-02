@@ -57,15 +57,17 @@ else
         if [ ! -f ".$EXECUTABLE" ]; then
             echo Compilation
             make cleanCompilation -s
-            echo "  Cleaned bin/ and build/"
+            make createCompDir -s
+            echo "  Created/Cleaned bin/ and build/"
             make -s
             echo "  Compilation done."
         fi
     fi
-    #cleaning files
+
+    make createDir -s
     make moveImagesToDemo -s
     make cleanTemp -s
-    echo Cleaned temp/
+    echo Created/Cleaned temp/
     echo 
 
     if [ "${settingsVar[1]}" -eq 1 ]; then
