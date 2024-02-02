@@ -5,6 +5,8 @@
 
 #include "../include/avlT.h"
 
+#define NUM_VALUES_T 10
+
 // Function to create a new AVL tree node with the given route_id and distance
 NodeT* newNodeT(char* city_name, int num_steps, int firsts){
     NodeT* n = malloc(sizeof(NodeT));
@@ -17,11 +19,18 @@ NodeT* newNodeT(char* city_name, int num_steps, int firsts){
     return n;
 }
 
-// Function to add the 10 biggest values of the AVL tree in ascending order to an array
-void inOrderT(NodeT* n, int* count, NodeT* results[10]) {
-    if (n == NULL || *count >= 10) return;
+void printNodeT(NodeT* n) {
+    if (n == NULL) {
+        printf("NULL\n");
+    }
+    printf("%s;%d;%d\n", n->city, n->key, n->num_firsts);
+}
+
+// Function to add the NUM_VALUES_T biggest values of the AVL tree in ascending order to an array
+void inOrderT(NodeT* n, int* count, NodeT* results[]) {
+    if (n == NULL || *count >= NUM_VALUES_T) return;
     inOrderT(n->right, count, results);
-    if (*count < 10) {
+    if (*count < NUM_VALUES_T) {
         results[*count]=n;
         *count += 1;
     }
@@ -128,10 +137,7 @@ NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts) {
         node->left = addNodeT(node->left, city_name, num_steps, num_firsts);
     else if (num_steps > node->key)
         node->right = addNodeT(node->right, city_name, num_steps, num_firsts);
-    else {
-        // Handle case where num_steps is equal to the current node's key
-        // (decide based on additional criteria or leave empty)
-    }
+    else return node;
 
     // Balance the tree
     node->height = heightT(node);

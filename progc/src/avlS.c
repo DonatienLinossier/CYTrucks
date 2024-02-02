@@ -4,6 +4,8 @@
 
 #include "../include/avlS.h"
 
+#define NUM_VALUES_S 50
+
 // Function to create a new AVL tree node with the given route_id and distance
 NodeS* newNodeS(int route_id, float distance) {
     NodeS* n = malloc(sizeof(NodeS));
@@ -20,7 +22,7 @@ void printNodeS(NodeS* n) {
     if (n == NULL) {
         printf("NULL\n");
     }
-    printf("Routeid=%d min=%d max=%d total=%d num_steps=%d\n", n->key, n->min, n->max, n->total, n->num_steps);
+    printf("%d;%f;%f;%f;%f\n",n->key, n->min, n->total / n->num_steps, n->max, n->max - n->min);
 }
 
 
@@ -150,14 +152,14 @@ void findRanges(NodeS* root, NodeS** maxRanges, int* count) {
         findRanges(root->left, maxRanges, count);
 
         // Update maxRanges array with the current node
-        if (*count < 50) {
+        if (*count < NUM_VALUES_S) {
             maxRanges[*count] = root;
             (*count)++;
         } else {
             // Check if the current node has a higher range than the lowest range in maxRanges
             if ((root->max - root->min) > (maxRanges[49]->max - maxRanges[49]->min)) {
-                maxRanges[49] = root;
-                qsort(maxRanges, 50, sizeof(NodeS*), compareRanges);
+                maxRanges[NUM_VALUES_S-1] = root;
+                qsort(maxRanges, NUM_VALUES_S, sizeof(NodeS*), compareRanges);
             }
         }
 
@@ -181,16 +183,16 @@ void findRangesIterative(NodeS* root, NodeS** maxRanges, int* count) {
         current = stack[top--];
 
         // Update maxRanges array with the current node
-        if (*count < 50) {
+        if (*count < NUM_VALUES_S) {
             maxRanges[*count] = current;
             (*count)++;
         } else {
             // Check if the current node has a higher range than the lowest range in maxRanges
             if ((current->max - current->min) > (maxRanges[49]->max - maxRanges[49]->min)) {
-                maxRanges[49] = current;
+                maxRanges[NUM_VALUES_S-1] = current;
 
                 // Perform insertion sort for the updated element
-                for (int i = 48; i >= 0 && (maxRanges[i]->max - maxRanges[i]->min) < (maxRanges[i + 1]->max - maxRanges[i + 1]->min); i--) {
+                for (int i = NUM_VALUES_S-2; i >= 0 && (maxRanges[i]->max - maxRanges[i]->min) < (maxRanges[i + 1]->max - maxRanges[i + 1]->min); i--) {
                     NodeS* temp = maxRanges[i];
                     maxRanges[i] = maxRanges[i + 1];
                     maxRanges[i + 1] = temp;
@@ -205,7 +207,7 @@ void findRangesIterative(NodeS* root, NodeS** maxRanges, int* count) {
 
 // Function to get an array of pointers to the 50 nodes with the largest ranges in the AVL tree
 NodeS** getMaxRanges(NodeS* root, int* count) {
-    NodeS** maxRanges = (NodeS**)malloc(50 * sizeof(NodeS*));
+    NodeS** maxRanges = (NodeS**)malloc(NUM_VALUES_S * sizeof(NodeS*));
     *count = 0;
 
     // Find and update the 50 nodes with the largest ranges

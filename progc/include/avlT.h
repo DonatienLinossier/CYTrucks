@@ -14,8 +14,11 @@ typedef struct nodeT {
 // Function to create a new AVL tree node with the given city_name, num_steps, and num_firsts
 NodeT* newNodeT(char* city_name, int num_steps, int firsts);
 
+// Function to print the details of a node in the AVL tree
+void printNodeT(NodeT* n);
+
 // Function to display values in the AVL tree in ascending order
-void inOrderT(NodeT* n, int* count, NodeT* results[10]);
+void inOrderT(NodeT* n, int* count, NodeT* results[]);
 
 // Function to return the height of the AVL tree (maximum number of sons)
 int heightT(NodeT* n);
