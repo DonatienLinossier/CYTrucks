@@ -16,7 +16,9 @@ if [ "$#" -eq 0 ]; then
     exit 1
 fi
 
-# Verification if the source file exists; if not, display an error message and print help.
+#verrification 
+
+make createDataDir -s
 if [ ! -f "$1" ]; then
     echo "File $1 does not exist."
     printHelp 1 # Put 1 as a parameter to indicate exit.
