@@ -12,7 +12,7 @@ typedef struct nodeT{//Declares the NodeT structure used for AVL trees
 
 NodeT* newNodeT(char* city_name, int num_steps, int firsts);//Creates a new NodeT with the city_name as a key
 
-void inOrderT(NodeT* n,int* count);//Displays the values in the AVL tree in ascending order
+void inOrderT(NodeT* n,int* count, NodeT* results[10]);//Displays the values in the AVL tree in ascending order
 
 int heightT(NodeT* n);//Returns the height of the AVL tree(Max number of sons)
 
@@ -26,6 +26,8 @@ NodeT* rightRotateT(NodeT* y);//To use when the right branch is too heavy and st
 NodeT* leftRotateT(NodeT* x);//To use when the left branch is too heavy and straight
 
 void freeNodeT(NodeT* node);
+
+int compareT(const void* c, const void* d);
 
 NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts);
 

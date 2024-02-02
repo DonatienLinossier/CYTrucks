@@ -17,14 +17,14 @@ NodeT* newNodeT(char* city_name, int num_steps, int firsts){//Creates a new Node
 }
 
 
-void inOrderT(NodeT* n, int* count) {
+void inOrderT(NodeT* n, int* count, NodeT* results[10]) {
     if (n == NULL || *count >= 10) return;
-    inOrderT(n->right, count);
+    inOrderT(n->right, count, results);
     if (*count < 10) {
-        printf("%s;%d;%d\n", n->city, n->key, n->num_firsts);
+        results[*count]=n;
         *count += 1;
     }
-    inOrderT(n->left, count);
+    inOrderT(n->left, count, results);
 }
 
 int heightT(NodeT* n){//Returns the height of the AVL tree(Max number of sons)
@@ -105,6 +105,12 @@ void freeNodeT(NodeT* node) {
     freeNodeT(node->right);
     free(node->city);  // Free the allocated memory for the city name
     free(node);
+}
+
+int compareT(const void* c, const void* d) {
+    const NodeT* a = *(const NodeT **)c;
+    const NodeT* b = *(const NodeT **)d;
+    return strcmp(b->city,a->city);
 }
 
 NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts){
