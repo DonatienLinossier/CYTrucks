@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "avlT.h"
+#include "../include/avlT.h"
 
 NodeT* newNodeT(char* city_name, int num_steps, int firsts){//Creates a new NodeT with the city_name as a key
     NodeT* n = malloc(sizeof(NodeT));

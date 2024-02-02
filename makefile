@@ -35,49 +35,80 @@
 #    |-- Makefile
 #    |-- README.md
 
+.PHONY: moveImagesToDemo cleanCompilation cleanTemp cleanDemo
 
 
-DATA_DIR = data
-C_DIR = progc
-	SRC_DIR = $(C_DIR)/src
-	INCLUDE_DIR = $(C_DIR)/include
-	BUILD_DIR = $(C_DIR)/build
-	BIN_DIR = $(C_DIR)/bin
+# Compiler
+CC=gcc
 
-GNU_DIR = gnuplot
-TEMP_DIR = temp
-IMAGES_DIR = images
-DEMO_DIR = demo
+# Compiler flags
+CFLAGS= -lm #-wall
 
-createDirs:
-	mkdir -p $(DATA_DIR) $(BUILD_DIR) $(BIN_DIR) $(TEMP_DIR) $(IMAGES_DIR) $(DEMO_DIR)
+PROGC=progc
+SRCDIR=$(PROGC)/src
+OBJDIR=$(PROGC)/build
+BINDIR=$(PROGC)/bin
+
+DATADIR=data
+DEMODIR=demo
+IMGDIR=images
+TEMPDIR=temp
 
 
-cleanAll : cleanData cleanBuild cleanBin cleanTemp cleanImages cleanDemo
+# Source files
+SRCS=$(wildcard $(SRCDIR)/*.c)
 
-#Clean
-cleanData : 
-	rm -f $(DATA_DIR)/*
+# Object files
+OBJS=$(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRCS))
 
-cleanBuild : 
-	rm -f $(BUILD_DIR)/*
+# Executable name
+EXEC=$(BINDIR)/main
 
-cleanBin : 
-	rm -f $(BIN_DIR)/*
+# Default target
+all: $(EXEC)
+
+# Linking
+$(EXEC): $(OBJS)
+	$(CC) $(OBJS) -o $@ $(CFLAGS)
+
+# Compilation
+$(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(BINDIR):
+	mkdir -p $(BINDIR)
+
+$(DEMODIR):
+	mkdir -p $(DEMODIR)
+
+$(IMGDIR):
+	mkdir -p $(IMGDIR)
+
+$(DATADIR):
+	mkdir -p $(DATADIR)
+
+$(TEMPDIR):
+	mkdir -p $(TEMPDIR)
+
+
+
+cleanCompilation:
+	rm -f $(OBJDIR)/*
+	rm -f $(BINDIR)/*
 
 cleanTemp : 
-	rm -f $(TEMP_DIR)/*
+	rm -f $(TEMPDIR)/*
 
-cleanImages :
-# on copie le dossier images dans demo 
-# question enregistre t-on plusieurs demos ??
-	rm -f $(IMAGES_DIR)/*
+cleanDemo :
+	rm -f $(DEMODIR)/*
 
-cleanDemo : 
-	rm -f $(DEMO_DIR)/*
-
-
-
-
-
-
+moveImagesToDemo:
+	number=$$(ls -l $(DEMODIR) | grep "^d" | wc -l); \
+	output="$(DEMODIR)/Output$$number"; \
+	mkdir -p "$$output"; \
+	mv images/* "$$output"

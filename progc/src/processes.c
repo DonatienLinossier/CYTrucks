@@ -1,13 +1,13 @@
-#include "processes.h"
+#include "../include/processes.h"
 
-void processS(){
+void processS(char * link){
     char bufferb[4096]; // Assuming a reasonable buffer size
 
     FILE *fptr;
 
     // Open a file in read mode
     char buffer[100];
-    fptr = fopen("../data/data.csv", "r"); 
+    fptr = fopen(link, "r"); 
     if(fptr==NULL) {
         printf("NULL\n");
         exit(0);
@@ -37,14 +37,15 @@ void processS(){
     return;
 }
 
-void processT(){
+void processT(char * link){
     char bufferb[4096]; // Assuming a reasonable buffer size
 
     FILE *fptr;
 
     // Open a file in read mode
-    char buffer[100]; 
-    fptr = fopen("../temp/TtempC.txt", "r"); 
+    char buffer[100];
+    //fptr = fopen("sample.csv", "r"); 
+    fptr = fopen(link, "r"); 
     if(fptr==NULL) {
         printf("NULL");
         exit(0);
@@ -74,13 +75,7 @@ void processT(){
         city = NULL;
     }
     int count=0;
-    NodeT* results[10];
-    inOrderT(root,&count,results);
-    qsort(results, 10, sizeof(NodeT*), compareT);
-    for (int i=0;i<10;i++){
-        printf("%s;%d;%d",results[i]->city,results[i]->key,results[i]->num_firsts);
-    }
-
+    inOrderT(root,&count);
     
     freeNodeT(root);
     fclose(fptr);

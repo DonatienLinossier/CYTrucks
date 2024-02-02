@@ -1,4 +1,4 @@
-#include "inputFile.h"
+#include "../include/inputFile.h"
 
 void getDataForT(const char* input, char** cityA, char** cityB, int* isFirst) {
     char* token = strtok((char*)input, ";");//route ID
