@@ -36,7 +36,7 @@ Options:
   -s             Enable option S.
 
 Examples:
-  truckanalyse.sh -d1 -l      # Run the script with options 1 and L.
+  truckanalyse.sh -d1 -l      # Run the script with options d1 and L.
   truckanalyse.sh -t -s       # Run the script with options T and S.
 
 Options can be combined. For example:
