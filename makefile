@@ -35,7 +35,7 @@
 #    |-- Makefile
 #    |-- README.md
 
-.PHONY: moveImagesToDemo cleanCompilation cleanTemp cleanDemo
+.PHONY: moveImagesToDemo cleanCompilation cleanTemp cleanDemo cleanImg
 
 
 # Compiler
@@ -98,14 +98,17 @@ $(TEMPDIR):
 
 
 cleanCompilation:
-	rm -f $(OBJDIR)/*
-	rm -f $(BINDIR)/*
+	rm -rf $(OBJDIR)/*
+	rm -rf $(BINDIR)/*
 
 cleanTemp : 
-	rm -f $(TEMPDIR)/*
+	rm -rf $(TEMPDIR)/*
 
 cleanDemo :
-	rm -f $(DEMODIR)/*
+	rm -rf $(DEMODIR)/*
+
+cleanImg :
+	rm -rf $(IMGDIR)/*
 
 moveImagesToDemo:
 	number=$$(ls -l $(DEMODIR) | grep "^d" | wc -l); \
