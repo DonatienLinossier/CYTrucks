@@ -20,9 +20,7 @@ NodeT* newNodeT(char* city_name, int num_steps, int firsts){
 }
 
 void printNodeT(NodeT* n) {
-    if (n == NULL) {
-        printf("NULL\n");
-    }
+    if (n == NULL)exit(1);
     printf("%s;%d;%d\n", n->city, n->key, n->num_firsts);
 }
 
@@ -112,6 +110,18 @@ NodeT* leftRotateT(NodeT* x){
     return y;
 }
 
+// Left then right rotate to balance the AVL Tree when the right branch is too heavy but bended
+NodeT* doubleRightRotateT(NodeT* n){
+    n->left = leftRotateT(n->left);
+    return rightRotateT(n);
+}
+
+// Right then left rotate to balance the AVL Tree when the left branch is too heavy but bended
+NodeT* doubleLeftRotateS(NodeT* n){
+    n->right = rightRotateT(n->right);
+    return leftRotateT(n);
+}
+
 //Function that frees the whole tree
 void freeNodeT(NodeT* node) {
     if (node == NULL) return;
@@ -150,15 +160,11 @@ NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts) {
     if (balance > 1 && num_steps > node->right->key)
         return leftRotateT(node);
 
-    if (balance < -1 && num_steps > node->left->key) {
-        node->left = leftRotateT(node->left);
-        return rightRotateT(node);
-    }
+    if (balance < -1 && num_steps > node->left->key)
+        return doubleRightRotateS(node);
 
-    if (balance > 1 && num_steps < node->right->key) {
-        node->right = rightRotateT(node->right);
-        return leftRotateT(node);
-    }
+    if (balance > 1 && num_steps < node->right->key)
+        return doubleLeftRotateT(node);
 
     return node;
 }

@@ -13,8 +13,7 @@ void processS(char * link) {
     char buffer[100];
     fptr = fopen(link, "r"); 
     if (fptr == NULL) {
-        printf("NULL\n");
-        exit(0);
+        exit(1);
     }
 
     int route_id;
@@ -53,8 +52,7 @@ void processT(char * link) {
     char buffer[100];
     fptr = fopen(link, "r"); 
     if (fptr == NULL) {
-        printf("NULL");
-        exit(0);
+        exit(1);
     }
 
     int num_steps = 0;
