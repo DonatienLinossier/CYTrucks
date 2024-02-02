@@ -9,7 +9,7 @@ set encoding utf8
 
 
 set margins 10, 10, 7, 5
-set yrange [-10:6000]
+set yrange [-10:3500]
 set ytics 1000
 
 set style data histogram
@@ -29,6 +29,6 @@ set xlabel "TOWN NAMES" font ",15" offset 0,-1
 
 
 set datafile separator ";"
-plot filename using 2:xtic(1) lc "#00ffff" t "Total routes" , '' using 3 lc "#00bfff" t "First town" 
+plot filename using 2:xtic(1) lc "#00ffff" t "Total routes" , '' using 3 lc "#000fff" t "First town" 
 
 set output
