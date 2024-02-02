@@ -29,8 +29,8 @@ Description:
 
 Options:
   -h, --help     Display this help message and exit.
-  -d1            Enable option 1 : .
-  -d2            Enable option 2.
+  -d1            Enable option d1 : .
+  -d2            Enable option d2.
   -l             Enable option L.
   -t             Enable option T.
   -s             Enable option S.
