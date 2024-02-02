@@ -33,6 +33,12 @@ NodeS* rightRotateS(NodeS* y);
 // Left rotation to balance the AVL Tree when the right branch is too heavy and straight
 NodeS* leftRotateS(NodeS* x);
 
+// Left then right rotate to balance the AVL Tree when the right branch is too heavy but bended
+NodeS* doubleRightRotateS(NodeS* n);
+
+// Right then left rotate to balance the AVL Tree when the left branch is too heavy but bended
+NodeS* doubleLeftRotateS(NodeS* n);
+
 // Function to add a new node to the AVL Tree and balance the tree
 NodeS* addNodeS(NodeS* node, int route_id, float distance);
 

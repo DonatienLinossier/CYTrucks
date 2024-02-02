@@ -13,8 +13,7 @@ void processS(char * link) {
     char buffer[100];
     fptr = fopen(link, "r"); 
     if (fptr == NULL) {
-        printf("NULL\n");
-        exit(0);
+        exit(1);
     }
 
     int route_id;
@@ -22,7 +21,7 @@ void processS(char * link) {
     fgets(buffer, sizeof(buffer), fptr); // get first line
     NodeS* root = NULL;
 
-    // Loop through the file and populate AVL S tree
+    // Loop through the file and fill AVL tree
     while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
         getDataForS(buffer, &route_id, &distance);
         root = addNodeS(root, route_id, distance);
@@ -53,8 +52,7 @@ void processT(char * link) {
     char buffer[100];
     fptr = fopen(link, "r"); 
     if (fptr == NULL) {
-        printf("NULL");
-        exit(0);
+        exit(1);
     }
 
     int num_steps = 0;

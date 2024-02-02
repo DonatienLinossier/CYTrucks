@@ -19,9 +19,7 @@ NodeS* newNodeS(int route_id, float distance) {
 
 // Function to print the details of a node in the AVL tree
 void printNodeS(NodeS* n) {
-    if (n == NULL) {
-        printf("NULL\n");
-    }
+    if (n == NULL) exit(1);
     printf("%d;%f;%f;%f;%f\n",n->key, n->min, n->total / n->num_steps, n->max, n->max - n->min);
 }
 
@@ -62,7 +60,7 @@ int balanceS(NodeS* n){
     }
 }
 
-//Rotations are used to balance the AVL Tree when it is unbalanced by shifting the NodeSs
+// Rotations are used to balance the AVL Tree when it is unbalanced by shifting the NodeSs
 
 // Right rotation to balance the AVL Tree when the left branch is too heavy and straight
 NodeS* rightRotateS(NodeS* y) {
@@ -92,6 +90,18 @@ NodeS* leftRotateS(NodeS* x) {
     return y;
 }
 
+// Left then right rotate to balance the AVL Tree when the right branch is too heavy but bended
+NodeS* doubleRightRotateS(NodeS* n){
+    n->left = leftRotateS(n->left);
+    return rightRotateS(n);
+}
+
+// Right then left rotate to balance the AVL Tree when the left branch is too heavy but bended
+NodeS* doubleLeftRotateS(NodeS* n){
+    n->right = rightRotateS(n->right);
+    return leftRotateS(n);
+}
+
 // Function to add a new node to the AVL Tree and balance the tree
 NodeS* addNodeS(NodeS* node, int route_id, float distance) {
     // Find the correct position to add the node and add it
@@ -116,23 +126,17 @@ NodeS* addNodeS(NodeS* node, int route_id, float distance) {
 
     int balance = balanceS(node);
 
-    if (balance < -1 && route_id < node->left->key) {
+    if (balance < -1 && route_id < node->left->key)
         return rightRotateS(node);
-    }
 
-    if (balance > 1 && route_id > node->right->key) {
+    if (balance > 1 && route_id > node->right->key)
         return leftRotateS(node);
-    }
 
-    if (balance < -1 && route_id > node->left->key) {
-        node->left = leftRotateS(node->left);
-        return rightRotateS(node);
-    }
+    if (balance < -1 && route_id > node->left->key)
+        return doubleLeftRotateS(node);
 
-    if (balance > 1 && route_id < node->right->key) {
-        node->right = rightRotateS(node->right);
-        return leftRotateS(node);
-    }
+    if (balance > 1 && route_id < node->right->key)
+        return doubleRightRotateS(node);
 
     return node;
 }
