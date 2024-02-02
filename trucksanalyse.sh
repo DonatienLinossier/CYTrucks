@@ -29,27 +29,6 @@ fi
 
 settingsVar=(0 0 0 0 0 0)
 
-
-if [ "$DEBUG" -eq 0 ]; then 
-        if [ ! -e "$linkExeMain" ]; then
-                gcc -o $linkExeMain $linkCMain 
-                if [ ! $? -eq 0 ];then
-                        echo compilation not succesfull
-                        exit 1
-                        
-                fi
-        fi
-  
-
-        for folder in "${linkFolderReset[@]}"; do
-                if [ -e "$folder" ]; then
-                        rm -r "$folder"
-                fi
-                mkdir "$folder"
-        done
-fi
-
-
 #Recupérer les arguments
 for arg in "$@"; do
     case $arg in
@@ -72,8 +51,17 @@ done
 
 #Choice
 if [ "${settingsVar[0]}" -eq 1 ]; then
-    printHelp 0
+    printHelp 1
 else 
+    if ((${settingsVar[1]} == 1 || ${settingsVar[2]} == 1 || ${settingsVar[3]} == 1)); then
+        if ((${settingsVar[4]} == 1 || ${settingsVar[5]} == 1)); then
+            if [ ! -f "$EXECUTABLE" ]; then
+                make #compile
+            fi
+        fi
+        make #remove
+    fi 
+
     if [ "${settingsVar[1]}" -eq 1 ]; then
         processD1 $filename
     fi
