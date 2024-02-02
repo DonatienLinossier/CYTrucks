@@ -29,14 +29,14 @@ Description:
 
 Options:
   -h, --help     Display this help message and exit.
-  -d1            Enable option d1 : .
-  -d2            Enable option d2.
-  -l             Enable option L.
-  -t             Enable option T.
-  -s             Enable option S.
+  -d1            Enable option D1
+  -d2            Enable option D2
+  -l             Enable option L
+  -t             Enable option T
+  -s             Enable option S
 
 Examples:
-  truckanalyse.sh -d1 -l      # Run the script with options d1 and L.
+  truckanalyse.sh -d1 -l      # Run the script with options D1 and L.
   truckanalyse.sh -t -s       # Run the script with options T and S.
 
 Options can be combined. For example:
@@ -45,6 +45,25 @@ Options can be combined. For example:
 ```
 
 Once you ran truckanalyse.sh check the images file where all the plots are generated.
+
+## Options
+
+There are 5 different data analysis options for this project, all creating graph images that shows this data.
+
+D1 Process :
+  Displays the names and numbers of routes of the 10 truckers with the highest number of routes.
+
+D2 Process :
+  Displays the names and total distance driven of the 10 truckers with the highest distance.
+
+L Process :
+  Displays the 10 routes longest routes.
+
+T Process :
+  Displays the name, numbers of routes going through and number of routes beginning there of the 10 cities with the highest numbers of routes going through.
+
+S Process : 
+  Displays the minimum, maximum and average distance of the steps of the 50 routes with the highest difference maximum - minimum.
 
 
 
