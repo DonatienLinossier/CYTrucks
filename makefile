@@ -37,7 +37,7 @@
 #    |-- Makefile
 #    |-- README.md
 
-.PHONY: moveImagesToDemo cleanCompilation cleanTemp cleanDemo cleanImg clean
+.PHONY: moveImagesToDemo cleanCompilation cleanTemp cleanDemo cleanImg clean createDir createCompDir
 
 
 # Compiler
@@ -77,7 +77,9 @@ $(EXEC): $(OBJS)
 $(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+createCompDir: $(OBJDIR) $(BINDIR)
 
+createDir: $(IMGDIR) $(TEMPDIR) $(DEMODIR)
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
@@ -96,6 +98,7 @@ $(DATADIR):
 
 $(TEMPDIR):
 	mkdir -p $(TEMPDIR)
+
 
 
 
