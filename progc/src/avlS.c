@@ -133,10 +133,10 @@ NodeS* addNodeS(NodeS* node, int route_id, float distance) {
         return leftRotateS(node);
 
     if (balance < -1 && route_id > node->left->key)
-        return doubleLeftRotateS(node);
+        return doubleRightRotateS(node);
 
     if (balance > 1 && route_id < node->right->key)
-        return doubleRightRotateS(node);
+        return doubleLeftRotateS(node);
 
     return node;
 }
