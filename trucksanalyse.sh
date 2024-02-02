@@ -18,6 +18,7 @@ fi
 
 #verrification 
 
+make createDataDir -s
 if [ ! -f "$1" ]; then
     echo "File $1 does not exist."
     printHelp 1 #put 1 in parrameter for exit
