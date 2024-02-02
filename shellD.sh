@@ -15,9 +15,9 @@ exitTime() {
 
     elapsed_time=$(echo "$end_time - $start_time" | bc)
     if (( $(echo "$elapsed_time < 1" | bc -l) )); then
-        echo "Execution time was $elapsed_time s"
+        echo "  Execution time was $elapsed_time s"
     else
-        echo "Execution time was $elapsed_time s"
+        echo "  Execution time was $elapsed_time s"
     fi
 
     if [ "$1" -eq 1 ]; then

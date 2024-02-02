@@ -113,12 +113,13 @@ cleanImg :
 clean: cleanCompilation cleanTemp cleanTemp cleanImg cleanDemo
 
 moveImagesToDemo:
+	@echo "Moving files from last execution to $(DEMODIR)/OutputX"
 	@if [ -n "$$(ls -A $(IMGDIR))" ]; then \
 		number=$$(ls -l $(DEMODIR) | grep "^d" | wc -l); \
 		output="$(DEMODIR)/Output$$number"; \
 		mkdir -p "$$output"; \
 		mv images/* "$$output"; \
-		echo "Images moved to $$output"; \
+		echo "  Files from $(IMGDIR) moved to $$output"; \
 	else \
-		echo "$(IMGDIR) is empty"; \
+		echo "  No files from last execution. No files moved."; \
     fi
