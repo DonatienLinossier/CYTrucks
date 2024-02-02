@@ -1,35 +1,46 @@
 #ifndef AVLT_H
 #define AVLT_H
 
-typedef struct nodeT{//Declares the NodeT structure used for AVL trees
-    int key;
-    struct nodeT* left;
-    struct nodeT* right;
-    char* city;
-    int num_firsts;
-    int height;
-}NodeT;
+// Structure for AVL tree node
+typedef struct nodeT {
+    int key;              // Key value for AVL tree node
+    struct nodeT* left;   // Pointer to the left child
+    struct nodeT* right;  // Pointer to the right child
+    char* city;           // City name
+    int num_firsts;       // Number of firsts
+    int height;           // Height of the node in the AVL tree
+} NodeT;
 
-NodeT* newNodeT(char* city_name, int num_steps, int firsts);//Creates a new NodeT with the city_name as a key
+// Function to create a new AVL tree node with the given city_name, num_steps, and num_firsts
+NodeT* newNodeT(char* city_name, int num_steps, int firsts);
 
-void inOrderT(NodeT* n,int* count, NodeT* results[10]);//Displays the values in the AVL tree in ascending order
+// Function to display values in the AVL tree in ascending order
+void inOrderT(NodeT* n, int* count, NodeT* results[10]);
 
-int heightT(NodeT* n);//Returns the height of the AVL tree(Max number of sons)
+// Function to return the height of the AVL tree (maximum number of sons)
+int heightT(NodeT* n);
 
-int balanceT(NodeT* n);//Returns the balance of the AVL Tree(height of its right branch - height of its left branch, should be between -1 and 1)
+// Function to return the balance of the AVL Tree (height of its right branch - height of its left branch, should be between -1 and 1)
+int balanceT(NodeT* n);
 
-int getMin(int values[],int length);
+// Function to find the index of the minimum value in an array
+int getMin(int values[], int length);
 
-//Rotations are used to balance the AVL Tree when it is unbalanced by shifting the NodeTs
-NodeT* rightRotateT(NodeT* y);//To use when the right branch is too heavy and straight
+// Rotations are used to balance the AVL Tree when it is unbalanced by shifting the nodes
 
-NodeT* leftRotateT(NodeT* x);//To use when the left branch is too heavy and straight
+// Right rotation to use when the right branch is too heavy and straight
+NodeT* rightRotateT(NodeT* y);
 
+// Left rotation to use when the left branch is too heavy and straight
+NodeT* leftRotateT(NodeT* x);
+
+// Function that frees the entire AVL tree
 void freeNodeT(NodeT* node);
 
+// Comparison function for qsort
 int compareT(const void* c, const void* d);
 
+// Function to add a new node to the AVL tree
 NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts);
 
-
-#endif //AVLT_H
+#endif // AVLT_H
