@@ -1,5 +1,8 @@
 #include "../include/processes.h"
 
+#define NUM_VALUES_T 10
+#define NUM_VALUES_S 50
+
 //Give the results of the process S from the given file
 void processS(char * link) {
     char bufferb[4096]; // Assuming a reasonable buffer size
@@ -27,11 +30,12 @@ void processS(char * link) {
 
     int count;
     NodeS** maxRangesArray = getMaxRanges(root, &count);
-    qsort(maxRangesArray, 50, sizeof(NodeS*), compareRanges);
+    qsort(maxRangesArray, NUM_VALUES_S, sizeof(NodeS*), compareRanges);
 
     // Access the nodes with the highest ranges using maxRangesArray[i]
     for (int i = 0; i < count; ++i) {
-        printf("%d;%d;%f;%f;%f;%f\n", i + 1, maxRangesArray[i]->key, maxRangesArray[i]->min, maxRangesArray[i]->total / maxRangesArray[i]->num_steps, maxRangesArray[i]->max, maxRangesArray[i]->max - maxRangesArray[i]->min);
+        printf("%d;",i);
+        printNodeS(maxRangesArray[i]);
     }
 
     freeNodeS(root);
@@ -56,7 +60,7 @@ void processT(char * link) {
     int num_steps = 0;
     int num_firsts = 0;
     char* city = NULL;
-    int values[10] = {0};
+    int values[NUM_VALUES_T] = {0};
     int min = 0;
     int size_avl = 0;
 
@@ -66,11 +70,11 @@ void processT(char * link) {
     // Loop through the file and fill AVL T tree
     while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
         getDataForTFromPreTreatment(buffer, &city, &num_steps, &num_firsts);
-        if (size_avl < 10 || num_steps > values[min]) {
+        if (size_avl < NUM_VALUES_T || num_steps > values[min]) {
             size_avl += 1;
             if (num_steps > values[min]) {
                 values[min] = num_steps;
-                min = getMin(values, 10);
+                min = getMin(values, NUM_VALUES_T);
             }
             root = addNodeT(root, city, num_steps, num_firsts);
         }
@@ -79,13 +83,13 @@ void processT(char * link) {
     }
 
     int count = 0;
-    NodeT* results[10];
+    NodeT* results[NUM_VALUES_T];
     inOrderT(root, &count, results);
-    qsort(results, 10, sizeof(NodeT*), compareT);
+    qsort(results, NUM_VALUES_T, sizeof(NodeT*), compareT);
 
-    // Print the top 10 results
-    for (int i = 0; i < 10; i++) {
-        printf("%s;%d;%d\n", results[i]->city, results[i]->key, results[i]->num_firsts);
+    // Print the top NUM_VALUES_T results
+    for (int i = 0; i < NUM_VALUES_T; i++) {
+        printNodeT(results[i]);
     }
 
     freeNodeT(root);
