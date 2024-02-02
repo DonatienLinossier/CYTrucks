@@ -4,54 +4,53 @@
 
 #include "../include/avlS.h"
 
-NodeS* newNodeS(int route_id, float distance){//Creates a new NodeS with "a" as a key
+// Function to create a new AVL tree node with the given route_id and distance
+NodeS* newNodeS(int route_id, float distance) {
     NodeS* n = malloc(sizeof(NodeS));
-    n->key=route_id;
+    n->key = route_id;
     n->left = n->right = NULL;
     n->min = n->max = n->total = distance;
-    n->num_steps=1;
-    n->height=0;
+    n->num_steps = 1;
+    n->height = 0;
     return n;
 }
 
-void printNodeS(NodeS* n){
-    if(n==NULL){
+// Function to print the details of a node in the AVL tree
+void printNodeS(NodeS* n) {
+    if (n == NULL) {
         printf("NULL\n");
     }
-    printf("Routeid=%d min=%d max=%d total=%d num_steps=%d\n",n->key,n->min,n->max,n->total,n->num_steps);
+    printf("Routeid=%d min=%d max=%d total=%d num_steps=%d\n", n->key, n->min, n->max, n->total, n->num_steps);
 }
 
 
-
-void inOrderS(NodeS* n){//Displays the values in the AVL tree in ascending order
-    if(n==NULL){
+// Function to display the values in the AVL tree in ascending order
+void inOrderS(NodeS* n) {
+    if (n == NULL) {
         return;
     }
     inOrderS(n->left);
-    printf("%d\n",n->key);
+    printf("%d\n", n->key);
     inOrderS(n->right);
-    return;
 }
 
-int heightS(NodeS* n){//Returns the height of the AVL tree(Max number of sons)
-    if(n==NULL){
+// Function to calculate the height of the AVL tree
+int heightS(NodeS* n) {
+    if (n == NULL) {
         return 0;
-    }
-    else if(n->right == NULL && n->left == NULL){
+    } else if (n->right == NULL && n->left == NULL) {
         return 1;
-    }
-    else if(n->right == NULL){
-        return 1+n->left->height;
-    }
-    else if(n->left == NULL){
-        return 1+n->right->height;
-    }
-    else{
-        return 1+fmax(n->left->height, n->right->height);
+    } else if (n->right == NULL) {
+        return 1 + n->left->height;
+    } else if (n->left == NULL) {
+        return 1 + n->right->height;
+    } else {
+        return 1 + fmax(n->left->height, n->right->height);
     }
 }
 
-int balanceS(NodeS* n){//Returns the balance of the AVL Tree(height of its right branch - height of its left branch, should be between -1 and 1)
+// Function to calculate the balance of the AVL Tree
+int balanceS(NodeS* n){
     if(n==NULL){
         return(0);
     }
@@ -63,7 +62,8 @@ int balanceS(NodeS* n){//Returns the balance of the AVL Tree(height of its right
 
 //Rotations are used to balance the AVL Tree when it is unbalanced by shifting the NodeSs
 
-NodeS* rightRotateS(NodeS* y){//To use when the right branch is too heavy and straight
+// Right rotation to balance the AVL Tree when the left branch is too heavy and straight
+NodeS* rightRotateS(NodeS* y) {
     NodeS* x = y->left;
     NodeS* T2 = x->right;
 
@@ -76,7 +76,8 @@ NodeS* rightRotateS(NodeS* y){//To use when the right branch is too heavy and st
     return x;
 }
 
-NodeS* leftRotateS(NodeS* x){//To use when the left branch is too heavy and straight
+// Left rotation to balance the AVL Tree when the right branch is too heavy and straight
+NodeS* leftRotateS(NodeS* x) {
     NodeS* y = x->right;
     NodeS* T2 = y->left;
 
@@ -89,22 +90,22 @@ NodeS* leftRotateS(NodeS* x){//To use when the left branch is too heavy and stra
     return y;
 }
 
-NodeS* addNodeS(NodeS* node, int route_id, float distance){
-// Find the correct position to addNodeS the node and addNodeS it
-    if (node == NULL){
+// Function to add a new node to the AVL Tree and balance the tree
+NodeS* addNodeS(NodeS* node, int route_id, float distance) {
+    // Find the correct position to add the node and add it
+    if (node == NULL) {
         return newNodeS(route_id, distance);
     }
-    if (route_id < node->key){
+    if (route_id < node->key) {
         node->left = addNodeS(node->left, route_id, distance);
-    }
-    else if (route_id > node->key){
+    } else if (route_id > node->key) {
         node->right = addNodeS(node->right, route_id, distance);
-    }
-    else{
-        if(distance<node->min)node->min=distance;
-        else if(distance>node->max)node->max=distance;
-        node->total+=distance;
-        node->num_steps+=1;
+    } else {
+        // Update values if the node with the same key already exists
+        if (distance < node->min) node->min = distance;
+        else if (distance > node->max) node->max = distance;
+        node->total += distance;
+        node->num_steps += 1;
         return node;
     }
 
@@ -113,11 +114,11 @@ NodeS* addNodeS(NodeS* node, int route_id, float distance){
 
     int balance = balanceS(node);
 
-    if (balance < -1 && route_id < node->left->key){
+    if (balance < -1 && route_id < node->left->key) {
         return rightRotateS(node);
     }
 
-    if (balance > 1 && route_id > node->right->key){
+    if (balance > 1 && route_id > node->right->key) {
         return leftRotateS(node);
     }
 
@@ -131,17 +132,19 @@ NodeS* addNodeS(NodeS* node, int route_id, float distance){
         return leftRotateS(node);
     }
 
-    //printf("return\n");
     return node;
 }
 
 
+
+// Comparison function for sorting nodes based on their ranges
 int compareRanges(const void* c, const void* d) {
     const NodeS* a = *(const NodeS **)c;
     const NodeS* b = *(const NodeS **)d;
     return b->max - b->min - (a->max - a->min);
 }
 
+// Function to find and update the 50 nodes with the largest ranges in the AVL tree
 void findRanges(NodeS* root, NodeS** maxRanges, int* count) {
     if (root != NULL) {
         findRanges(root->left, maxRanges, count);
@@ -162,6 +165,8 @@ void findRanges(NodeS* root, NodeS** maxRanges, int* count) {
     }
 }
 
+
+// Iterative version of finding and updating the 50 nodes with the largest ranges in the AVL tree
 void findRangesIterative(NodeS* root, NodeS** maxRanges, int* count) {
     NodeS* current = root;
     NodeS* stack[100]; // Adjust the size as needed
@@ -198,12 +203,23 @@ void findRangesIterative(NodeS* root, NodeS** maxRanges, int* count) {
 }
 
 
+// Function to get an array of pointers to the 50 nodes with the largest ranges in the AVL tree
 NodeS** getMaxRanges(NodeS* root, int* count) {
     NodeS** maxRanges = (NodeS**)malloc(50 * sizeof(NodeS*));
     *count = 0;
 
+    // Find and update the 50 nodes with the largest ranges
     //findRanges(root, maxRanges, count);
-    findRanges(root, maxRanges, count);
+    findRangesIterative(root, maxRanges, count);
 
     return maxRanges;
+}
+
+//Function that frees the whole tree
+void freeNodeS(NodeS* node) {
+    if (node == NULL) return;
+    
+    freeNodeS(node->left);
+    freeNodeS(node->right);
+    free(node);
 }

@@ -1,6 +1,7 @@
 #include "../include/processes.h"
 
-void processS(char * link){
+//Give the results of the process S from the given file
+void processS(char * link) {
     char bufferb[4096]; // Assuming a reasonable buffer size
 
     FILE *fptr;
@@ -8,81 +9,85 @@ void processS(char * link){
     // Open a file in read mode
     char buffer[100];
     fptr = fopen(link, "r"); 
-    if(fptr==NULL) {
+    if (fptr == NULL) {
         printf("NULL\n");
         exit(0);
     }
 
     int route_id;
     float distance;
-    fgets(buffer, sizeof(buffer), fptr); //get first line
+    fgets(buffer, sizeof(buffer), fptr); // get first line
     NodeS* root = NULL;
+
+    // Loop through the file and populate AVL S tree
     while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
         getDataForS(buffer, &route_id, &distance);
-        
-        root = addNodeS(root,route_id,distance);
+        root = addNodeS(root, route_id, distance);
     }
 
     int count;
     NodeS** maxRangesArray = getMaxRanges(root, &count);
     qsort(maxRangesArray, 50, sizeof(NodeS*), compareRanges);
 
-   
-     // Access the nodes with the highest ranges using maxRangesArray[i]
+    // Access the nodes with the highest ranges using maxRangesArray[i]
     for (int i = 0; i < count; ++i) {
-        printf("%d;%d;%f;%f;%f;%f\n",i+1,maxRangesArray[i]->key, maxRangesArray[i]->min,maxRangesArray[i]->total/maxRangesArray[i]->num_steps,maxRangesArray[i]->max, maxRangesArray[i]->max - maxRangesArray[i]->min);
+        printf("%d;%d;%f;%f;%f;%f\n", i + 1, maxRangesArray[i]->key, maxRangesArray[i]->min, maxRangesArray[i]->total / maxRangesArray[i]->num_steps, maxRangesArray[i]->max, maxRangesArray[i]->max - maxRangesArray[i]->min);
     }
 
+    freeNodeS(root);
     fclose(fptr);
     return;
 }
 
-void processT(char * link){
+//Give the results of the process T from the given file
+void processT(char * link) {
     char bufferb[4096]; // Assuming a reasonable buffer size
 
     FILE *fptr;
 
     // Open a file in read mode
     char buffer[100];
-    //fptr = fopen("sample.csv", "r"); 
     fptr = fopen(link, "r"); 
-    if(fptr==NULL) {
+    if (fptr == NULL) {
         printf("NULL");
         exit(0);
     }
 
-
     int num_steps = 0;
     int num_firsts = 0;
     char* city = NULL;
-    int values[10]={0};
-    int min=0;
-    int size_avl=0;
+    int values[10] = {0};
+    int min = 0;
+    int size_avl = 0;
 
-    fgets(buffer, sizeof(buffer), fptr); //get first line
+    fgets(buffer, sizeof(buffer), fptr); // get first line
     NodeT* root = NULL;
+
+    // Loop through the file and fill AVL T tree
     while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
         getDataForTFromPreTreatment(buffer, &city, &num_steps, &num_firsts);
-        if(size_avl<10 || num_steps > values[min]){
-            size_avl+=1;
-            if(num_steps>values[min]){
-                values[min]=num_steps;
-                min=getMin(values,10);
+        if (size_avl < 10 || num_steps > values[min]) {
+            size_avl += 1;
+            if (num_steps > values[min]) {
+                values[min] = num_steps;
+                min = getMin(values, 10);
             }
-            root = addNodeT(root,city,num_steps,num_firsts);
+            root = addNodeT(root, city, num_steps, num_firsts);
         }
         free(city);
         city = NULL;
     }
-    int count=0;
+
+    int count = 0;
     NodeT* results[10];
-    inOrderT(root,&count,results);
+    inOrderT(root, &count, results);
     qsort(results, 10, sizeof(NodeT*), compareT);
-    for (int i=0;i<10;i++){
-        printf("%s;%d;%d\n",results[i]->city,results[i]->key,results[i]->num_firsts);
+
+    // Print the top 10 results
+    for (int i = 0; i < 10; i++) {
+        printf("%s;%d;%d\n", results[i]->city, results[i]->key, results[i]->num_firsts);
     }
 
     freeNodeT(root);
     fclose(fptr);
 }
-

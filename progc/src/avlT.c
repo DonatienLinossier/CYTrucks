@@ -5,7 +5,8 @@
 
 #include "../include/avlT.h"
 
-NodeT* newNodeT(char* city_name, int num_steps, int firsts){//Creates a new NodeT with the city_name as a key
+// Function to create a new AVL tree node with the given route_id and distance
+NodeT* newNodeT(char* city_name, int num_steps, int firsts){
     NodeT* n = malloc(sizeof(NodeT));
     n->key=num_steps;
     n->left = n->right = NULL;
@@ -16,7 +17,7 @@ NodeT* newNodeT(char* city_name, int num_steps, int firsts){//Creates a new Node
     return n;
 }
 
-
+// Function to add the 10 biggest values of the AVL tree in ascending order to an array
 void inOrderT(NodeT* n, int* count, NodeT* results[10]) {
     if (n == NULL || *count >= 10) return;
     inOrderT(n->right, count, results);
@@ -27,7 +28,8 @@ void inOrderT(NodeT* n, int* count, NodeT* results[10]) {
     inOrderT(n->left, count, results);
 }
 
-int heightT(NodeT* n){//Returns the height of the AVL tree(Max number of sons)
+// Function to calculate the height of the AVL tree
+int heightT(NodeT* n){
     if(n==NULL){
         return 0;
     }
@@ -45,7 +47,8 @@ int heightT(NodeT* n){//Returns the height of the AVL tree(Max number of sons)
     }
 }
 
-int balanceT(NodeT* n){//Returns the balance of the AVL Tree(height of its right branch - height of its left branch, should be between -1 and 1)
+// Function to calculate the balance of the AVL Tree
+int balanceT(NodeT* n){
     if(n==NULL){
         return(0);
     }
@@ -55,7 +58,7 @@ int balanceT(NodeT* n){//Returns the balance of the AVL Tree(height of its right
     }
 }
 
-int getMin(int array[],int length){
+int getMin(int array[],int length){           
     if(array==NULL){
         exit(1);
     }
@@ -72,7 +75,8 @@ int getMin(int array[],int length){
 
 //Rotations are used to balance the AVL Tree when it is unbalanced by shifting the NodeTs
 
-NodeT* rightRotateT(NodeT* y){//To use when the right branch is too heavy and straight
+// Right rotation to balance the AVL Tree when the left branch is too heavy and straight
+NodeT* rightRotateT(NodeT* y){
     NodeT* x = y->left;
     NodeT* T2 = x->right;
 
@@ -85,7 +89,8 @@ NodeT* rightRotateT(NodeT* y){//To use when the right branch is too heavy and st
     return x;
 }
 
-NodeT* leftRotateT(NodeT* x){//To use when the left branch is too heavy and straight
+// Left rotation to balance the AVL Tree when the right branch is too heavy and straight
+NodeT* leftRotateT(NodeT* x){
     NodeT* y = x->right;
     NodeT* T2 = y->left;
 
@@ -98,6 +103,7 @@ NodeT* leftRotateT(NodeT* x){//To use when the left branch is too heavy and stra
     return y;
 }
 
+//Function that frees the whole tree
 void freeNodeT(NodeT* node) {
     if (node == NULL) return;
     
@@ -113,7 +119,8 @@ int compareT(const void* c, const void* d) {
     return strcmp(a->city,b->city);
 }
 
-NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts){
+// Function to addNodeT a new node to the AVL tree
+NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts) {
     // Find the correct position to addNodeT the node and addNodeT it
     if (node == NULL)
         return newNodeT(city_name, num_steps, num_firsts);
@@ -121,8 +128,9 @@ NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts){
         node->left = addNodeT(node->left, city_name, num_steps, num_firsts);
     else if (num_steps > node->key)
         node->right = addNodeT(node->right, city_name, num_steps, num_firsts);
-    else{
-        
+    else {
+        // Handle case where num_steps is equal to the current node's key
+        // (decide based on additional criteria or leave empty)
     }
 
     // Balance the tree
@@ -146,7 +154,6 @@ NodeT* addNodeT(NodeT* node, char* city_name, int num_steps, int num_firsts){
         return leftRotateT(node);
     }
 
-    //printf("return\n");
     return node;
 }
 
