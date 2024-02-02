@@ -75,8 +75,14 @@ void processT(char * link){
         city = NULL;
     }
     int count=0;
-    inOrderT(root,&count);
-    
+    NodeT* results[10];
+    inOrderT(root,&count,results);
+    qsort(results, 10, sizeof(NodeT*), compareT);
+    for (int i=0;i<10;i++){
+        printf("%s;%d;%d\n",results[i]->city,results[i]->key,results[i]->num_firsts);
+    }
+
     freeNodeT(root);
     fclose(fptr);
 }
+
