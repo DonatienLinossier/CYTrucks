@@ -25,7 +25,7 @@ Install and setup with apt-get and git on debian distrib
 Usage: truckanalyse.sh [FILE] [OPTIONS]...
 
 Description:
-  This script performs a specific task.
+  This script performs a data analysis for CYTrucks.
 
 Options:
   -h, --help     Display this help message and exit.

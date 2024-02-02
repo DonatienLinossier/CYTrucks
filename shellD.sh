@@ -5,29 +5,33 @@ images=images/
 
 
 
-EXECUTABLE="/progc/EXEC"
+EXECUTABLE="./progc/EXEC"
 
 
 #test
 startTime() {
-        start_time=`date +%s.%N`
+    start_time=$(date +%s.%N)
 }
 
 exitTime() {
-        end_time=`date +%s.%N`
-        x=$(echo "$end_time - $start_time" | bc)
-                
-        if [ "$(echo "$x<1" | bc)" -eq 1 ];then
-                echo execution time was 0$x s 
-        else
-                echo execution time was $x s 
-        fi
+    end_time=$(date +%s.%N)
 
-        if [ "$1" -eq 1 ]; then
-            exit 1
-        else echo
-        fi
+    if [ -z "$start_time" ]; then
+        return 1
+    fi
+
+    elapsed_time=$(echo "$end_time - $start_time" | bc)
+    if (( $(echo "$elapsed_time < 1" | bc -l) )); then
+        echo "Execution time was $elapsed_time s"
+    else
+        echo "Execution time was $elapsed_time s"
+    fi
+
+    if [ "$1" -eq 1 ]; then
+        exit 1
+    fi
 }
+
 
 D1plot=D1plot.txt
 d1PlotOutput=d1PlotOutput.png
@@ -49,25 +53,18 @@ processD1() {
     
     startTime
 
-    tail +2 $1 | awk -F';' '!seen[$1,$6]++ {count[$6]++} END {for (driver in count) printf "%d;%s\n", count[driver], driver}' | sort  -t ";" -k1nr | head -10 > temp/D1plot.txt
+    tail +2 $1 | awk -F';' '!seen[$1,$6]++ {count[$6]++} END {for (driver in count) printf "%d;%s\n", count[driver], driver}' | sort  -t ";" -k1nr | head -10 > $temp$D1plot
     
     exitTime 0
-    now=`date +%s`
-    
-    tail +2 $1 | awk -F';' '!seen[$1,$6]++ {count[$6]++} END {for (driver in count) printf "%d;%s\n", count[driver], driver}' | sort  -t ";" -k1nr | head -10 > $temp$D1plot
+  
+    gnuplot -e "filename='temp/D1plot.txt'" -e "out='images/d1PlotOutput.png'" plot/plot_option_d1.plt
+
+    mogrify -rotate 90 "$images$d1PlotOutput"
 
     if [ ! -f "$temp$D1plot" ]; then
         echo "Error: couldn't generate $temp$D1plot."
         return 1
     fi
-
-    nowB=`date +%s`
-
-    gnuplot -e "filename='temp/D1plot.txt'" -e "out='images/d1PlotOutput.png'" plot/plot_option_d1.plt
-
-    mogrify -rotate 90 "$images$d1PlotOutput"
-
-    echo "Process lasted $((nowB - now)) seconds."
 }
 
 
@@ -97,18 +94,16 @@ processD2() {
     
     tail +2 $1 | LC_NUMERIC=C awk -F';' '{sum[$6]+=$5} END {for (driver in sum) printf "%f;%s\n", sum[driver], driver}' | sort -t ";" -k1nr | head -10 > $temp$D2plot
 
-    if [ ! -f "$temp$D2plot" ]; then
-        echo "Error: couldn't generate $temp$D2plot."
-        return 1
-    fi
-
     exitTime 0
 
     gnuplot -e "filename='temp/D2plot.txt'" -e "out='images/d2PlotOutput.png'" plot/plot_option_d2.plt
     
     mogrify -rotate 90 'images/d2PlotOutput.png'
 
-    echo "Process lasted $((nowB - now)) seconds."
+    if [ ! -f "$temp$D2plot" ]; then
+        echo "Error: couldn't generate $temp$D2plot."
+        return 1
+    fi
 }
 
 
@@ -139,22 +134,18 @@ processL() {
     tail +2 $1 | LC_NUMERIC=C awk -F';' '{sumTrajet[$1]+=$5} END {for (trajet in sumTrajet) printf "%f;%s\n", sumTrajet[trajet], trajet}' | sort -t ";" -k1nr | head -10 | sort -t ";" -k2n > $temp$lplot
 
     if [ ! -f "$temp$lplot" ]; then
-        echo "Error: couldn't generate $temp$lplot."
+        echo "Error: generation failed for: $temp$lplot."
         return 1
     fi
 
     exitTime 0
 
+    gnuplot -e "filename='$temp$lplot'" -e "out='$images$lPlotOutput'" $plot$plot_option_l
+
     if [ ! -f "$images$lPlotOutput" ]; then
         echo "Error: couldn't generate $images$lPlotOutput."
         return 1
     fi
-
-    gnuplot -e "filename='$temp$lplot'" -e "out='$images$lPlotOutput'" $plot$plot_option_l
-
-
-
-    echo "Process lasted $((nowB - now)) seconds."
 }
 
 
@@ -178,11 +169,6 @@ processS() {
 
     echo Process S on file $1
     startTime
-
-    if [ ! -f "$EXECUTABLE" ]; then
-        gcc -o ./progc/EXEC ./progc/main.c ./progc/processes.c ./progc/inputFile.c  ./progc/avlT.c ./progc/avlS.c ./progc/processes.h ./progc/inputFile.h ./progc/avlT.h ./progc/avlS.h ./progc/processes.h -lm
-    fi
-
 
     ./progc/EXEC $1 0 > temp/Splot.txt
 
