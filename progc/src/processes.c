@@ -1,4 +1,4 @@
-#include "processes.h"
+#include "../include/processes.h"
 
 void processS(char * link){
     char bufferb[4096]; // Assuming a reasonable buffer size

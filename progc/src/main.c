@@ -1,5 +1,5 @@
-#include "inputFile.h"
-#include "processes.h"
+#include "../include/inputFile.h"
+#include "../include/processes.h"
 
 
 int main(int argc, char *argv[]) {

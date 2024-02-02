@@ -35,7 +35,39 @@
 #    |-- Makefile
 #    |-- README.md
 
+# Compiler
+CC=gcc
 
+# Compiler flags
+CFLAGS= -lm -Wall
+
+PROGC=progc
+SRCDIR=$(PROGC)/src
+OBJDIR=$(PROGC)/build
+BINDIR=$(PROGC)/bin
+
+# Source files
+SRCS=$(wildcard $(SRCDIR)/*.c)
+
+# Object files
+OBJS=$(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRCS))
+
+# Executable name
+EXEC=$(BINDIR)/main
+
+# Default target
+all: $(EXEC)
+
+# Linking
+$(EXEC): $(OBJS)
+	$(CC) $(OBJS) -o $@ $(CFLAGS)
+
+# Compilation
+$(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
 
 DATA_DIR = data
 C_DIR = progc

@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "avlS.h"
+#include "../include/avlS.h"
 
 NodeS* newNodeS(int route_id, float distance){//Creates a new NodeS with "a" as a key
     NodeS* n = malloc(sizeof(NodeS));
