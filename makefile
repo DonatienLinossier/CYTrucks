@@ -113,7 +113,12 @@ cleanImg :
 clean: cleanCompilation cleanTemp cleanTemp cleanImg cleanDemo
 
 moveImagesToDemo:
-	number=$$(ls -l $(DEMODIR) | grep "^d" | wc -l); \
-	output="$(DEMODIR)/Output$$number"; \
-	mkdir -p "$$output"; \
-	mv images/* "$$output"
+	@if [ -n "$$(ls -A $(IMGDIR))" ]; then \
+		number=$$(ls -l $(DEMODIR) | grep "^d" | wc -l); \
+		output="$(DEMODIR)/Output$$number"; \
+		mkdir -p "$$output"; \
+		mv images/* "$$output"; \
+		echo "Images moved to $$output"; \
+	else \
+		echo "$(IMGDIR) is empty"; \
+    fi

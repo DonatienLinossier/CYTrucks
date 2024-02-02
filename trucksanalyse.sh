@@ -18,12 +18,11 @@ fi
 
 filename="$dataFolder/$1"
 if [ -f "$filename" ]; then
-    if [ "$DEBUG" -eq 1 ]; then 
-        echo "File $filename exists."
-    fi
+    echo "File $filename exists."
 else
     echo "File $filename does not exist."
-    printHelp 1
+    printHelp 0
+    exit 1
 fi 
 
 
@@ -51,7 +50,8 @@ done
 
 #Choice
 if [ "${settingsVar[0]}" -eq 1 ]; then
-    printHelp 1
+    printHelp 0
+    exit 1
 else 
     if ((${settingsVar[4]} == 1 || ${settingsVar[5]} == 1)); then
         if [ ! -f ".$EXECUTABLE" ]; then
