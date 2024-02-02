@@ -37,7 +37,7 @@
 #    |-- Makefile
 #    |-- README.md
 
-.PHONY: moveImagesToDemo cleanCompilation cleanTemp cleanDemo cleanImg clean createDir createCompDir
+.PHONY: moveImagesToDemo cleanCompilation cleanTemp cleanDemo cleanImg clean createDir createCompDir createDataDir
 
 
 # Compiler
@@ -80,6 +80,8 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
 createCompDir: $(OBJDIR) $(BINDIR)
 
 createDir: $(IMGDIR) $(TEMPDIR) $(DEMODIR)
+
+createDataDir: $(DATADIR)
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
